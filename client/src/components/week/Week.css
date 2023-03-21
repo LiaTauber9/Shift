@@ -1,0 +1,59 @@
+*{
+    box-sizing: border-box;
+}
+
+.table{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+
+}
+
+.column{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cell{
+    width: 150px;
+    height: 80px;
+    border: 3px solid black;
+    text-align: center;
+}
+
+.header{
+    background-color: yellow;
+}
+
+.part{
+    height: 150px;
+    padding: 10px;
+}
+
+.m_const_option{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.m_shift_selected{
+    width: 100%;
+    min-height: 20px;
+    border: 3px dotted;
+}
+
+.close{
+    color: red;
+}
+
+.open{
+    color: blue;
+}
+
+.favorite{
+    color: green;
+}
