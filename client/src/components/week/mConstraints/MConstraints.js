@@ -134,6 +134,7 @@ const MConstraints = (props) => {
 
     const saveSchedule = async (status = 'save') => {
         const data = [];
+        let msg = 'The shift schedule was successfully saved';
         for (let schedule in upsertScheduleData) {
             data.push(upsertScheduleData[schedule])
         }
@@ -148,6 +149,7 @@ const MConstraints = (props) => {
                 schedule.status = 'post'
             }
             console.log('saveSchedule post =>', data);
+            msg = 'The shift schedule has been saved and posted successfully'
         }
         try {
             const response = await axios.post('schedule/upsert', data, {
@@ -155,6 +157,7 @@ const MConstraints = (props) => {
                     'Content-Type': 'application/json'
                 }
             })
+            alert(msg)
             console.log('upsertSchedule=>', response.data);
         } catch (e) {
             console.log('upsertSchedule error=>', e)

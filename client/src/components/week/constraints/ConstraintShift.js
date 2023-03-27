@@ -2,6 +2,7 @@ import { Select, MenuItem, InputLabel, TextField } from "@mui/material"
 import { useState } from 'react';
 import { dayParts } from "../../../config/shiftsConfig";
 import { constraintsOptions, constraintsColors } from "../../../config/constraintsConfig";
+
 import '../Week.css';
 
 

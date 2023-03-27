@@ -91,7 +91,8 @@ const Constraints = (props) => {
                     'Content-Type': 'application/json'
                 }
             })
-            console.log('upsertConstraints=>', response.data);
+            alert('Your constraints were saved successfully')
+            console.log('upsertConstraints=>', response.data.msg);
         } catch (e) {
             console.log('upsertConstraints error=>', e)
         }

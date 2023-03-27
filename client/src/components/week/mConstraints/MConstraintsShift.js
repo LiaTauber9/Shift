@@ -15,7 +15,8 @@ const [end_at, setEnd_at] = useState(time.end_at)
     const [fullConstraints, setFullConstraints] = useState(constraints);
     const [color, setColor] = useState('');
     
-    const options = ['open', 'close', 'favorite', 'null'];
+    const options = ['open', 'favorite'];
+    const acordions = ['null', 'close']
 
     const {users} = useContext(AppContext);
     const usersObj = getUsersObj(users);
@@ -57,6 +58,10 @@ const [end_at, setEnd_at] = useState(time.end_at)
         changeOption({part,user_id:selected, start_at, end_at});
     } 
 
+    const sendWhatsapp = (emp)=>{
+        props.sendWhatsapp(emp,part)
+    }
+
    useEffect(addNullConstraint,[]);
 
     useEffect(()=>{
@@ -71,7 +76,7 @@ const [end_at, setEnd_at] = useState(time.end_at)
             <TextField style={{height:40}} label='End' type='time' value={end_at} onChange={changeEndTime} inputProps={{step:300}}/>
             <h3 className='m_shift_selected' onClick={()=>onSelect(null)} style={{backgroundColor:color}}>{selected ? usersObj[selected].name : ''}</h3>
             {
-            options.map((option,index)=><MConstraintsOption option={options[index]} employees={fullConstraints[option]} onSelect={onSelect} />)
+            options.map((option,index)=><MConstraintsOption option={options[index]} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp}/>)
             }
       </div>
     )
