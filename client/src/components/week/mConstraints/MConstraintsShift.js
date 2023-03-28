@@ -3,84 +3,95 @@ import { AppContext } from '../../../App';
 import MConstraintsOption from './MConstraintsOption';
 import { getUsersObj } from '../../../utils/users';
 import '../Week.css';
-import { Input, TextField } from '@mui/material';
+import { Input, TextField, Stack } from '@mui/material';
 
-const MConstraintsShift = (props)=>{
-    const {part, data, changeOption} = props;
-    const {constraints, schedule, time} = data;
+
+const MConstraintsShift = (props) => {
+    const { part, data, changeOption } = props;
+    const { constraints, schedule, time } = data;
     const [selected, setSelected] = useState
-(schedule.user_id);
-const [start_at, setStart_at] = useState(time.start_at)
-const [end_at, setEnd_at] = useState(time.end_at)
+        (schedule.user_id);
+    const [start_at, setStart_at] = useState(time.start_at)
+    const [end_at, setEnd_at] = useState(time.end_at)
     const [fullConstraints, setFullConstraints] = useState(constraints);
     const [color, setColor] = useState('');
-    
-    const options = ['open', 'favorite'];
-    const acordions = ['null', 'close']
 
-    const {users} = useContext(AppContext);
+    const options = ['open', 'favorite', 'null', 'close'];
+
+
+    const { users } = useContext(AppContext);
     const usersObj = getUsersObj(users);
-    const activeUsers = users.filter(user=>user.active);
+    const activeUsers = users.filter(user => user.active);
 
-    const addNullConstraint = ()=>{
+    const addNullConstraint = () => {
         const exist = [];
-        for( let option in constraints){
-                    for(let user of constraints[option]){
-                        exist.push(user.user_id); 
-                    }
+        for (let option in constraints) {
+            for (let user of constraints[option]) {
+                exist.push(user.user_id);
+            }
         }
         // console.log('exist=>',exist);
-        const activeUsersId = activeUsers.map(user=>user.id)
-        const nullUsersId = activeUsersId.filter(user=>!exist.includes(user))
+        const activeUsersId = activeUsers.map(user => user.id)
+        const nullUsersId = activeUsersId.filter(user => !exist.includes(user))
         // console.log('nullUsersId=>',nullUsersId);
-        const nullUsers = nullUsersId.map(user=>{return {user_id:user, note:null}})
+        const nullUsers = nullUsersId.map(user => { return { user_id: user, note: null } })
         constraints.null.push(...nullUsers)
         setFullConstraints(constraints)
     }
 
-    const onSelect = (user_id)=>{
+    const onSelect = (user_id) => {
         setSelected(user_id);
-        handleChange(user_id,start_at,end_at)
+        handleChange(user_id, start_at, end_at)
     }
 
-    const changeStartTime = (e)=>{
+    const changeStartTime = (e) => {
         setStart_at(e.target.value)
-        handleChange(selected,e.target.value,end_at)
+        handleChange(selected, e.target.value, end_at)
     }
 
-    const changeEndTime = (e)=>{
+    const changeEndTime = (e) => {
         setEnd_at(e.target.value)
-        handleChange(selected,start_at,e.target.value)
-    } 
-    
-    const handleChange = (selected,start_at,end_at) => {
-        console.log('changeOption=>',{part,user_id:selected, start_at, end_at});
-        changeOption({part,user_id:selected, start_at, end_at});
-    } 
-
-    const sendWhatsapp = (emp)=>{
-        props.sendWhatsapp(emp,part)
+        handleChange(selected, start_at, e.target.value)
     }
 
-   useEffect(addNullConstraint,[]);
+    const handleChange = (selected, start_at, end_at) => {
+        console.log('changeOption=>', { part, user_id: selected, start_at, end_at });
+        changeOption({ part, user_id: selected, start_at, end_at });
+    }
 
-    useEffect(()=>{
-        if(selected){
+    const sendWhatsapp = (emp) => {
+        props.sendWhatsapp(emp, part)
+    }
+
+    useEffect(addNullConstraint, []);
+
+    useEffect(() => {
+        if (selected) {
             setColor(usersObj[selected].color)
         }
-    },[selected])
+    }, [selected])
 
-    return(
-        <div className={`cell part`}style={{height:300}}>
-            <TextField style={{height:40}} label='Start' type='time' value={start_at} onChange={changeStartTime} inputProps={{step:300}}/>
-            <TextField style={{height:40}} label='End' type='time' value={end_at} onChange={changeEndTime} inputProps={{step:300}}/>
-            <h3 className='m_shift_selected' onClick={()=>onSelect(null)} style={{backgroundColor:color}}>{selected ? usersObj[selected].name : ''}</h3>
+    return (
+        <div className={`cell part`} style={{ height: 300 }}>
+            <TextField style={{ height: 40 }} label='Start' type='time' value={start_at} onChange={changeStartTime} inputProps={{ step: 300 }} />
+            <TextField style={{ height: 40 }} label='End' type='time' value={end_at} onChange={changeEndTime} inputProps={{ step: 300 }} />
+            <h3 className='m_shift_selected' onClick={() => onSelect(null)} style={{ backgroundColor: color }}>{selected ? usersObj[selected].name : ''}</h3>
             {
-            options.map((option,index)=><MConstraintsOption option={options[index]} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp}/>)
+                ['open', 'favorite'].map((option, index) => <MConstraintsOption option={options[index]} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />)
             }
-      </div>
+            <Stack direction="row" spacing={2}>
+                
+                <MConstraintsOption option='null' employees={fullConstraints['null']} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />
+               
+              
+                <MConstraintsOption option='close' employees={fullConstraints['close']} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />
+        
+            </Stack>
+            
+
+        </div>
     )
-   
+
 }
 
 export default MConstraintsShift;
