@@ -1,7 +1,6 @@
 import { useState, useContext, useEffect } from 'react';
 import { AppContext } from '../../../App';
 import MConstraintsOption from './MConstraintsOption';
-import { getUsersObj } from '../../../utils/users';
 import '../Week.css';
 import { Input, TextField, Stack } from '@mui/material';
 
@@ -9,6 +8,8 @@ import { Input, TextField, Stack } from '@mui/material';
 const MConstraintsShift = (props) => {
     const { part, data, changeOption } = props;
     const { constraints, schedule, time } = data;
+    const id = schedule.user_id===''?'empty':schedule.user_id
+    console.log(schedule.user_id==='',id);
     const [selected, setSelected] = useState
         (schedule.user_id);
     const [start_at, setStart_at] = useState(time.start_at)
@@ -19,9 +20,9 @@ const MConstraintsShift = (props) => {
     const options = ['open', 'favorite', 'null', 'close'];
 
 
-    const { users } = useContext(AppContext);
-    const usersObj = getUsersObj(users);
+    const { users,usersObj } = useContext(AppContext);
     const activeUsers = users.filter(user => user.active);
+    console.log('usersObj=>',usersObj,'selected=>',selected,'usersObj["empty"].name=>',usersObj['empty'].name,'schedule.user_id=>',schedule.user_id==='');
 
     const addNullConstraint = () => {
         const exist = [];
@@ -53,6 +54,7 @@ const MConstraintsShift = (props) => {
         setEnd_at(e.target.value)
         handleChange(selected, start_at, e.target.value)
     }
+    
 
     const handleChange = (selected, start_at, end_at) => {
         console.log('changeOption=>', { part, user_id: selected, start_at, end_at });
@@ -65,9 +67,13 @@ const MConstraintsShift = (props) => {
 
     useEffect(addNullConstraint, []);
 
+   
+
     useEffect(() => {
-        if (selected) {
+        if (usersObj[selected]) {
             setColor(usersObj[selected].color)
+        }else{
+            setColor('')
         }
     }, [selected])
 
@@ -75,16 +81,17 @@ const MConstraintsShift = (props) => {
         <div className={`cell part`} style={{ height: 300 }}>
             <TextField style={{ height: 40 }} label='Start' type='time' value={start_at} onChange={changeStartTime} inputProps={{ step: 300 }} />
             <TextField style={{ height: 40 }} label='End' type='time' value={end_at} onChange={changeEndTime} inputProps={{ step: 300 }} />
-            <h3 className='m_shift_selected' onClick={() => onSelect(null)} style={{ backgroundColor: color }}>{selected ? usersObj[selected].name : ''}</h3>
+            
+            <h3 className='m_shift_selected' onClick={() => onSelect(null)} style={{ backgroundColor: color }}>{usersObj[selected] ? usersObj[selected].name : ''}</h3>
+            {/* <h3 className='m_shift_selected' onClick={() => onSelect(null)} style={{ backgroundColor: color }}>{selected ? usersObj[selected].name : ''}</h3> */}
             {
-                ['open', 'favorite'].map((option, index) => <MConstraintsOption option={options[index]} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />)
+                ['open', 'favorite'].map((option, index) => <MConstraintsOption option={option} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />)
             }
             <Stack direction="row" spacing={2}>
                 
-                <MConstraintsOption option='null' employees={fullConstraints['null']} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />
-               
-              
-                <MConstraintsOption option='close' employees={fullConstraints['close']} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />
+            {
+                ['null', 'close'].map((option, index) => <MConstraintsOption option={option} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />)
+            }
         
             </Stack>
             

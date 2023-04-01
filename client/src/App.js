@@ -18,9 +18,10 @@ function App() {
   const [token, setToken] = useState('')
   const [user, setUser] = useState('')
   const [users, setUsers] = useState([])
+  const [usersObj, setUsersObj] = useState({})
   return (
     <BrowserRouter>
-      <AppContext.Provider value={{token,setToken,user,setUser,users,setUsers}}>
+      <AppContext.Provider value={{token,setToken,user,setUser,users,setUsers,usersObj, setUsersObj}}>
         <div className="App">
           <Nav/>
           <Routes>

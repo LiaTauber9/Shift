@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -8,21 +8,26 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import { useContext, useState } from "react";
 import { AppContext } from "../../../App";
-import { getUsersObj } from "../../../utils/users";
+
 
 const MConstraintsOption = (props) => {
-    const { users } = useContext(AppContext);
-    const usersObj = getUsersObj(users);
+    const { users, usersObj } = useContext(AppContext);
     const [showList, setShowList] = useState(false);
+
+    const onSelect = (emp)=>{
+        switch(props.option){
+            case 'close': alert('This shift is not open'); break;
+            case 'null': onSelectNull(emp); break;
+            default: props.onSelect(emp.user_id)
+        }
+    } 
+
+    const onSelectNull = (emp)=>{
+
+    }
 
     // console.log('usersObj MConstraintsOption',usersObj);
     // const optionColor = {open:'blue',close:'red',favorite:'green'}
-
-    const acordionOnClick = ()=>{
-       
-            alert('This shift is not open')
-    
-    }
 
     return (
         props.option === 'close' ||  props.option === 'null'?
@@ -33,7 +38,7 @@ const MConstraintsOption = (props) => {
               <List  sx={{bgcolor:'white', zIndex:1400, position: 'absolute'}}>
               {props.employees.map(emp=>              
                     <ListItem >
-                    <span onClick={() => acordionOnClick()} style={{ backgroundColor: `${usersObj[emp.user_id].color}80` }}>| {usersObj[emp.user_id].name} |</span>
+                    <Avatar variant="rounded" onClick={() => onSelect(emp)} sx={{ bgcolor: `${usersObj[emp.user_id].color}80`, width:25, height:25, fontSize:12 }}>HH</Avatar>
                   </ListItem>               
               )
             }
@@ -79,7 +84,7 @@ const MConstraintsOption = (props) => {
                 <p className={props.option} style={{ margin: 0 }}>{props.option}:
                     {props.employees.map((emp, index) =>
                         <span>
-                            <span key={index} onClick={() => props.onSelect(emp.user_id)} style={{ backgroundColor: `${usersObj[emp.user_id].color}80` }}>| {usersObj[emp.user_id].name} |</span>
+                            <span key={index} onClick={()=>onSelect(emp)} style={{ backgroundColor: `${usersObj[emp.user_id].color}80` }}>| {usersObj[emp.user_id].name} |</span>
                             {
                                 emp.note ? <span onClick={() => { alert(emp.note) }}>*</span> : ''
                             }

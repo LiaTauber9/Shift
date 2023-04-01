@@ -1,10 +1,11 @@
-import {useState,useContext} from 'react';
+import {useState,useContext,useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { AppContext } from '../../App';
+import { getUsersObj } from '../../utils/users';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -12,7 +13,7 @@ const LoginForm = () => {
   const [msg, setMsg] = useState('');
 
 
-  const {token,setToken,user,setUser,users,setUsers} = useContext(AppContext);
+  const {token,setToken,user,setUser,users,setUsers,setUsersObj} = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -43,10 +44,10 @@ const LoginForm = () => {
     try{
         const users = await axios.get('/m/getusers');
         // console.log('getUsers=>',users.data);
-        setUsers(users.data)
+        setUsers(users.data);
+        setUsersObj(getUsersObj(users.data))
       } catch(e){console.log(e)}    
-}
-    
+}   
 
   return(
     <div>
