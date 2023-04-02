@@ -9,8 +9,11 @@ const ScheduleShift = (props)=>{
     const {users} = useContext(AppContext);
     const id = props.shiftData.user_id || 'empty';
     console.log('id=>',id);
+    
     const usersObj = getUsersObj(users);
+    console.log('usersObj[id]=>',usersObj[id]);
     const color = usersObj[id].color || '#ffffff';
+    // const color = usersObj[id] ? usersObj[id].color : '#ffffff';
     
 
 

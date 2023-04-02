@@ -12,7 +12,7 @@ const Home = ()=>{
         
      
             
-        <WhatsApp />
+        <h1>Home</h1>
    
        
     )

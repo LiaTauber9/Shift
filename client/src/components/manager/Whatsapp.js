@@ -1,136 +1,49 @@
 import axios from 'axios';
 import { TextField, Box, Button, Card, CardContent, Typography, Avatar } from '@mui/material';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { AppContext } from '../../App';
 
-const WhatsApp = () => {
+const WhatsApp = (props) => {
     const [msg, setMsg] = useState('');
-    const endpoints = [{user_name:'LT'}]
-    const whatsappUsers = {
-        36:{
-            avatar_name:'FF',
-            color:"#FF2828",
-            api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
-        },
-        37:{
-            avatar_name:'EE',
-            color:"#E52893",
-            api_key:'712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
-        },
-        25:{
-            avatar_name:'AA',
-            color:"#992BD6",
-            api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
-        },
-        26:{
-            avatar_name:'BB',
-            color:"#0A4F97",
-            api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
-        },
-        27:{
-            avatar_name:'CC',
-            color:"#03CBC3",
-            api_key:'712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
-        },
-        28:{
-            avatar_name:'DD',
-            color:"#04E11F",
-            api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
-        }
+    const {usersObj} = useContext(AppContext)
+    const {updateSendToList, sendToList} = props
+   
+
+    const whatsappApiKeys = {
+        36:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
+        37:'712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc',
+        25:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
+        26:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
+        27:'712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc',
+        28:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
     }
-    const whatsappUsersList = [
-        {
-            avatar_name:'FF',
-            color:"#FF2828",
-            api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
-        },
-        {
-            avatar_name:'EE',
-            color:"#E52893",
-            api_key:'712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
-        },
-        {
-            avatar_name:'AA',
-            color:"#992BD6",
-            api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
-        },
-        {
-            avatar_name:'BB',
-            color:"#0A4F97",
-            api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
-        },
-        {
-            avatar_name:'CC',
-            color:"#03CBC3",
-            api_key:'712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
-        },
-        {
-            avatar_name:'DD',
-            color:"#04E11F",
-            api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
-        }
-    ];
-    const send = (msg, api_key) => {
-        const options = {
-            method: 'POST',
-            url: 'https://whin2.p.rapidapi.com/send',
-            headers: {
-                'content-type': 'application/json',
-                'X-RapidAPI-Key': `${api_key}`,
-                'X-RapidAPI-Host': 'whin2.p.rapidapi.com'
-            },
-            data: `{"text":"${msg}"}`
-        };
-
-        axios.request(options).then(function (response) {
-            console.log(response.data);
-        }).catch(function (error) {
-            console.error(error);
-        });
+    
+    const send = (msg) => {
+        sendToList.forEach(id=>{
+            const options = {
+                method: 'POST',
+                url: 'https://whin2.p.rapidapi.com/send',
+                headers: {
+                    'content-type': 'application/json',
+                    'X-RapidAPI-Key': `${whatsappApiKeys[id]}`,
+                    'X-RapidAPI-Host': 'whin2.p.rapidapi.com'
+                },
+                data: `{"text":"${msg}"}`
+            };
+    
+            axios.request(options).then(function (response) {
+                console.log(response.data);
+            }).catch(function (error) {
+                console.error(error);
+            });
+        })        
     }
-
-    const setUrl = () => {
-        const options = {
-            method: 'POST',
-            url: 'https://whin2.p.rapidapi.com/seturl',
-            headers: {
-                'content-type': 'application/json',
-                'X-RapidAPI-Key': '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
-                'X-RapidAPI-Host': 'whin2.p.rapidapi.com'
-            },
-            data: '{"url":"https://webhook.site/b7ac1f8a-8346-4e5d-8e91-9bc18d5bf5f8"}'
-        };
-
-        axios.request(options).then(function (response) {
-            console.log(response.data);
-        }).catch(function (error) {
-            console.error(error);
-        });
-    }
-
-    const showUrl = () => {
-        const options = {
-            method: 'GET',
-            url: 'https://whin2.p.rapidapi.com/showurl',
-            headers: {
-                'X-RapidAPI-Key': '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
-                'X-RapidAPI-Host': 'whin2.p.rapidapi.com'
-            }
-        };
-
-        axios.request(options).then(function (response) {
-            console.log(response.data);
-        }).catch(function (error) {
-            console.error(error);
-        });
-    }
-
+  
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        // const phone = event.target.phone.value;
         const message = event.target.message.value;
         console.log('message=>', message);
-        whatsappUsersList.forEach(user=>send(message, user.api_key));        
+        send(message);        
         setMsg('')
     }
 
@@ -147,7 +60,7 @@ const WhatsApp = () => {
           To:
         </Typography>
         {
-            whatsappUsersList.map((user,index)=><Avatar sx={{ bgcolor: user.color }}>{user.avatar_name}</Avatar>)
+            sendToList.map((user,index)=><Avatar key={index} sx={{ bgcolor: usersObj[user].color }} onClick={()=>updateSendToList(user)}>{usersObj[user].avatar_name} </Avatar>)
         }
         
             </CardContent>
@@ -163,8 +76,6 @@ const WhatsApp = () => {
                 </form>
             </Box>
 
-            {/* <button onClick={setUrl}>Set url</button>
-            <button onClick={showUrl}>Show url</button> */}
         </Card>
     )
 }
@@ -223,6 +134,110 @@ export default WhatsApp
 
     <button type="submit">Send Message</button>
   </form> */}
+
+
+  const whatsappUsers = {
+    36:{
+        avatar_name:'FF',
+        color:"#FF2828",
+        api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+    },
+    37:{
+        avatar_name:'EE',
+        color:"#E52893",
+        api_key:'712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
+    },
+    25:{
+        avatar_name:'AA',
+        color:"#992BD6",
+        api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+    },
+    26:{
+        avatar_name:'BB',
+        color:"#0A4F97",
+        api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+    },
+    27:{
+        avatar_name:'CC',
+        color:"#03CBC3",
+        api_key:'712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
+    },
+    28:{
+        avatar_name:'DD',
+        color:"#04E11F",
+        api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+    }
+}
+const whatsappUsersList = [
+    {
+        avatar_name:'FF',
+        color:"#FF2828",
+        api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+    },
+    {
+        avatar_name:'EE',
+        color:"#E52893",
+        api_key:'712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
+    },
+    {
+        avatar_name:'AA',
+        color:"#992BD6",
+        api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+    },
+    {
+        avatar_name:'BB',
+        color:"#0A4F97",
+        api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+    },
+    {
+        avatar_name:'CC',
+        color:"#03CBC3",
+        api_key:'712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
+    },
+    {
+        avatar_name:'DD',
+        color:"#04E11F",
+        api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+    }
+];
+
+
+const setUrl = () => {
+    const options = {
+        method: 'POST',
+        url: 'https://whin2.p.rapidapi.com/seturl',
+        headers: {
+            'content-type': 'application/json',
+            'X-RapidAPI-Key': '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
+            'X-RapidAPI-Host': 'whin2.p.rapidapi.com'
+        },
+        data: '{"url":"https://webhook.site/b7ac1f8a-8346-4e5d-8e91-9bc18d5bf5f8"}'
+    };
+
+    axios.request(options).then(function (response) {
+        console.log(response.data);
+    }).catch(function (error) {
+        console.error(error);
+    });
+}
+
+const showUrl = () => {
+    const options = {
+        method: 'GET',
+        url: 'https://whin2.p.rapidapi.com/showurl',
+        headers: {
+            'X-RapidAPI-Key': '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
+            'X-RapidAPI-Host': 'whin2.p.rapidapi.com'
+        }
+    };
+
+    axios.request(options).then(function (response) {
+        console.log(response.data);
+    }).catch(function (error) {
+        console.error(error);
+    });
+}
+
 
 
 

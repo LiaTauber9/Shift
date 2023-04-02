@@ -9,7 +9,7 @@ const MConstraintsShift = (props) => {
     const { part, data, changeOption } = props;
     const { constraints, schedule, time } = data;
     const id = schedule.user_id===''?'empty':schedule.user_id
-    console.log(schedule.user_id==='',id);
+    // console.log(schedule.user_id==='',id);
     const [selected, setSelected] = useState
         (schedule.user_id);
     const [start_at, setStart_at] = useState(time.start_at)
@@ -22,7 +22,7 @@ const MConstraintsShift = (props) => {
 
     const { users,usersObj } = useContext(AppContext);
     const activeUsers = users.filter(user => user.active);
-    console.log('usersObj=>',usersObj,'selected=>',selected,'usersObj["empty"].name=>',usersObj['empty'].name,'schedule.user_id=>',schedule.user_id==='');
+    // console.log('usersObj=>',usersObj,'selected=>',selected,'usersObj["empty"].name=>',usersObj['empty'].name,'schedule.user_id=>',schedule.user_id==='');
 
     const addNullConstraint = () => {
         const exist = [];
@@ -85,12 +85,12 @@ const MConstraintsShift = (props) => {
             <h3 className='m_shift_selected' onClick={() => onSelect(null)} style={{ backgroundColor: color }}>{usersObj[selected] ? usersObj[selected].name : ''}</h3>
             {/* <h3 className='m_shift_selected' onClick={() => onSelect(null)} style={{ backgroundColor: color }}>{selected ? usersObj[selected].name : ''}</h3> */}
             {
-                ['open', 'favorite'].map((option, index) => <MConstraintsOption option={option} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />)
+                ['open', 'favorite'].map((option, index) => <MConstraintsOption key={index} option={option} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />)
             }
             <Stack direction="row" spacing={2}>
                 
             {
-                ['null', 'close'].map((option, index) => <MConstraintsOption option={option} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />)
+                ['null', 'close'].map((option, index) => <MConstraintsOption key={index} option={option} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />)
             }
         
             </Stack>

@@ -2,20 +2,28 @@ import { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import axios from 'axios';
-import { AppContext } from '../../../App'
+import { AppContext } from '../../../App';
+import { ManagerContext } from '../../../App';
 import getWeekDates from '../../../utils/getWeekDates';
 import getDateString from '../../../utils/getDateString';
 import Week from '../Week';
 import { shiftsTime } from '../../../config/shiftsConfig';
 import '../Week.css';
+import SideBar from './SideBar';
 
 const MConstraints = (props) => {
     const navigate = useNavigate();
 
     const { user, users } = useContext(AppContext);
+    const {allScheduleData, upsertScheduleData} = useContext(ManagerContext)
     const [weekMConst, setWeekMConst] = useState([]);
     const [initSchedule, setInitSchedule] = useState([]);
-    const [displayedWeek, setDisplayedWeek] = useState(1)
+    const [displayedWeek, setDisplayedWeek] = useState(1);
+
+    let counter = {}
+    users.forEach(user=>counter[user.id]=[]);
+
+    const [shiftCounterObj, setShiftCounterObj] = useState(counter);
     let activeUsers;
     let users_id;
 
@@ -24,7 +32,8 @@ const MConstraints = (props) => {
 
     let weekDates = getWeekDates(displayedWeek); //=>array of Date-Obj of next week
     let fullDateStrings = weekDates.map(item => getDateString(item)); //=>array of String-format-date:'yyyy-mm-dd'
-    const upsertScheduleData = {};
+    // const allScheduleData = {};
+    // const upsertScheduleData = {};
     const upsertConstraintsData = {};
 
     useEffect(() => {
@@ -77,7 +86,12 @@ const MConstraints = (props) => {
             )
 
             setInitSchedule(schedule.data);
-            console.log('mGetSchedule=>', schedule.data)
+            console.log('mGetSchedule=>', schedule.data);
+            schedule.data.forEach(shift => {
+                allScheduleData[shift.id]=shift
+            });
+            console.log('allScheduleData=>',allScheduleData);
+            countShifts();
             mSetWeek(constraints.data, schedule.data)
         } catch (e) { console.log(e) }
     }
@@ -109,7 +123,22 @@ const MConstraints = (props) => {
         setWeekMConst(week)
     }
 
+    const countShifts = ()=>{
+        counter = {}
+        users.forEach(user=>counter[user.id]=[]);
+       
+        for(const shift in allScheduleData){
+            const shiftObj = allScheduleData[shift]
+            if(shiftObj.user_id != null){
+                counter[shiftObj.user_id].push(shiftObj.id)
+                
+            }
+        }
+        console.log('allScheduleData,counter=>',allScheduleData,counter);
+        setShiftCounterObj(counter)
+    }
 
+    
 
 
 
@@ -123,6 +152,9 @@ const MConstraints = (props) => {
         const newShiftSchedule = { id: scheduleId, date: fullDateStrings[day], day, part, user_id, start_at, end_at, status: 'save' }
         console.log('handleShiftClick/manager/newShiftSchedule=>', newShiftSchedule);
         upsertScheduleData[newShiftSchedule.id] = newShiftSchedule;
+        allScheduleData[newShiftSchedule.id] = newShiftSchedule;
+        console.log(allScheduleData);
+        countShifts();
         console.log('upsertScheduleData after update=>', upsertScheduleData);
     }
 
@@ -134,23 +166,25 @@ const MConstraints = (props) => {
 
     const saveSchedule = async (status = 'save') => {
         const data = [];
+        const scheduleObj = status === 'post' ? allScheduleData : upsertScheduleData;
         let msg = 'The shift schedule was successfully saved';
-        for (let schedule in upsertScheduleData) {
-            data.push(upsertScheduleData[schedule])
+        for (let schedule in scheduleObj) {
+            data.push(scheduleObj[schedule])
         }
         if (status === 'post') {
-            console.log('initSchedule=>', initSchedule);
-            for (let schedule of initSchedule) {
-                if (!upsertScheduleData[schedule.id]) {
-                    data.push(schedule)
-                }
-            }
-            for (let schedule of data) {
-                schedule.status = 'post'
-            }
-            console.log('saveSchedule post =>', data);
+            data.forEach(shift=>shift.status='post')
+            // for (let schedule of initSchedule) {
+            //     if (!upsertScheduleData[schedule.id]) {
+            //         data.push(schedule)
+            //     }
+            // }
+            // for (let schedule of data) {
+            //     schedule.status = 'post'
+            // }
+            // console.log('saveSchedule post =>', data);
             msg = 'The shift schedule has been saved and posted successfully'
         }
+        console.log('data=>',data);
         try {
             const response = await axios.post('schedule/upsert', data, {
                 headers: {
@@ -172,13 +206,15 @@ const MConstraints = (props) => {
             activeUsers = users.filter(user => user.active);
             users_id = activeUsers.map(user => user.id);
             console.log('activeUsers=>', activeUsers);
-            console.log('user_id=>', users_id);
+            console.log('users_id=>', users_id);
             getConstraintsSchedule();
             }
     }, []);
 
-    return (<div>
-        <h1>Constreaints Table</h1>
+    return (<div style={{display:'flex'}}>
+        {/* <h1>Constreaints Table</h1> */}
+        <SideBar shiftCounterObj={shiftCounterObj} style={{width:'18vw'}}/>
+        <div className='m_table'>
         <div className='table'>
             <Week type='mConstraints'
                 initWeek={weekMConst}
@@ -190,6 +226,7 @@ const MConstraints = (props) => {
              <Button onClick={saveSchedule}>Save</Button>
             : ''}
              <Button onClick={() => saveSchedule('post')}>Save and Post</Button>          
+        </div>
         </div>
         {/* {
             colorArray.map(color=>

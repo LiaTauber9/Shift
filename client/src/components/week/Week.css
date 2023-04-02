@@ -11,6 +11,10 @@
 
 }
 
+.m_table{
+    width: 88vw;
+}
+
 .column{
     display: flex;
     flex-direction: column;

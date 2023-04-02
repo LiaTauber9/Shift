@@ -36,8 +36,8 @@ const MConstraintsOption = (props) => {
                  
               {showList ? 
               <List  sx={{bgcolor:'white', zIndex:1400, position: 'absolute'}}>
-              {props.employees.map(emp=>              
-                    <ListItem >
+              {props.employees.map((emp,index)=>              
+                    <ListItem key={index}>
                     <Avatar variant="rounded" onClick={() => onSelect(emp)} sx={{ bgcolor: `${usersObj[emp.user_id].color}80`, width:25, height:25, fontSize:12 }}>HH</Avatar>
                   </ListItem>               
               )
