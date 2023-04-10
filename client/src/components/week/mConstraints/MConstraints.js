@@ -129,7 +129,7 @@ const MConstraints = (props) => {
        
         for(const shift in allScheduleData){
             const shiftObj = allScheduleData[shift]
-            if(shiftObj.user_id != null){
+            if(counter[shiftObj.user_id]){
                 counter[shiftObj.user_id].push(shiftObj.id)
                 
             }
