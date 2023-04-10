@@ -5,21 +5,21 @@ import { AppContext } from '../../App';
 
 const WhatsApp = (props) => {
     const [msg, setMsg] = useState('');
-    const {usersObj} = useContext(AppContext)
-    const {updateSendToList, sendToList} = props
-   
+    const { usersObj } = useContext(AppContext)
+    const { updateSendToList, sendToList } = props
+
 
     const whatsappApiKeys = {
-        36:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
-        37:'712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc',
-        25:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
-        26:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
-        27:'712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc',
-        28:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+        36: '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
+        37: '712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc',
+        25: '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
+        26: '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
+        27: '712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc',
+        28: '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
     }
-    
+
     const send = (msg) => {
-        sendToList.forEach(id=>{
+        sendToList.forEach(id => {
             const options = {
                 method: 'POST',
                 url: 'https://whin2.p.rapidapi.com/send',
@@ -30,20 +30,20 @@ const WhatsApp = (props) => {
                 },
                 data: `{"text":"${msg}"}`
             };
-    
+
             axios.request(options).then(function (response) {
                 console.log(response.data);
             }).catch(function (error) {
                 console.error(error);
             });
-        })        
+        })
     }
-  
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const message = event.target.message.value;
         console.log('message=>', message);
-        send(message);        
+        send(message);
         setMsg('')
     }
 
@@ -54,15 +54,15 @@ const WhatsApp = (props) => {
 
     return (
         <Card>
-           
-           <CardContent sx={{display:'flex', flexDirection:'row',alignItems:'flex-start'}}>
-            <Typography gutterBottom variant="h5" component="div">
-          To:
-        </Typography>
-        {
-            sendToList.map((user,index)=><Avatar key={index} sx={{ bgcolor: usersObj[user].color }} onClick={()=>updateSendToList(user)}>{usersObj[user].avatar_name} </Avatar>)
-        }
-        
+
+            <CardContent sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
+                <Typography gutterBottom variant="h5" component="div">
+                    To:
+                </Typography>
+                {
+                    sendToList.map((user, index) => <Avatar key={index} sx={{ bgcolor: usersObj[user].color }} onClick={() => updateSendToList(user)}>{usersObj[user].avatar_name} </Avatar>)
+                }
+
             </CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                 <form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
@@ -136,68 +136,68 @@ export default WhatsApp
   </form> */}
 
 
-  const whatsappUsers = {
-    36:{
-        avatar_name:'FF',
-        color:"#FF2828",
-        api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+const whatsappUsers = {
+    36: {
+        avatar_name: 'FF',
+        color: "#FF2828",
+        api_key: '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
     },
-    37:{
-        avatar_name:'EE',
-        color:"#E52893",
-        api_key:'712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
+    37: {
+        avatar_name: 'EE',
+        color: "#E52893",
+        api_key: '712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
     },
-    25:{
-        avatar_name:'AA',
-        color:"#992BD6",
-        api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+    25: {
+        avatar_name: 'AA',
+        color: "#992BD6",
+        api_key: '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
     },
-    26:{
-        avatar_name:'BB',
-        color:"#0A4F97",
-        api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+    26: {
+        avatar_name: 'BB',
+        color: "#0A4F97",
+        api_key: '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
     },
-    27:{
-        avatar_name:'CC',
-        color:"#03CBC3",
-        api_key:'712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
+    27: {
+        avatar_name: 'CC',
+        color: "#03CBC3",
+        api_key: '712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
     },
-    28:{
-        avatar_name:'DD',
-        color:"#04E11F",
-        api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+    28: {
+        avatar_name: 'DD',
+        color: "#04E11F",
+        api_key: '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
     }
 }
 const whatsappUsersList = [
     {
-        avatar_name:'FF',
-        color:"#FF2828",
-        api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+        avatar_name: 'FF',
+        color: "#FF2828",
+        api_key: '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
     },
     {
-        avatar_name:'EE',
-        color:"#E52893",
-        api_key:'712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
+        avatar_name: 'EE',
+        color: "#E52893",
+        api_key: '712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
     },
     {
-        avatar_name:'AA',
-        color:"#992BD6",
-        api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+        avatar_name: 'AA',
+        color: "#992BD6",
+        api_key: '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
     },
     {
-        avatar_name:'BB',
-        color:"#0A4F97",
-        api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+        avatar_name: 'BB',
+        color: "#0A4F97",
+        api_key: '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
     },
     {
-        avatar_name:'CC',
-        color:"#03CBC3",
-        api_key:'712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
+        avatar_name: 'CC',
+        color: "#03CBC3",
+        api_key: '712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
     },
     {
-        avatar_name:'DD',
-        color:"#04E11F",
-        api_key:'8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
+        avatar_name: 'DD',
+        color: "#04E11F",
+        api_key: '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29'
     }
 ];
 

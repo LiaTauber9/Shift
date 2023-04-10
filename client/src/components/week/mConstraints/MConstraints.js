@@ -15,19 +15,17 @@ const MConstraints = (props) => {
     const navigate = useNavigate();
 
     const { user, users } = useContext(AppContext);
-    const {allScheduleData, upsertScheduleData} = useContext(ManagerContext)
+    const { allScheduleData, upsertScheduleData } = useContext(ManagerContext)
     const [weekMConst, setWeekMConst] = useState([]);
     const [initSchedule, setInitSchedule] = useState([]);
     const [displayedWeek, setDisplayedWeek] = useState(1);
 
-    let counter = {}
-    users.forEach(user=>counter[user.id]=[]);
 
-    const [shiftCounterObj, setShiftCounterObj] = useState(counter);
+    const [shiftCounterObj, setShiftCounterObj] = useState(null);
     let activeUsers;
     let users_id;
 
-   
+
 
 
     let weekDates = getWeekDates(displayedWeek); //=>array of Date-Obj of next week
@@ -39,9 +37,10 @@ const MConstraints = (props) => {
     useEffect(() => {
         console.log('useEffect of displayWeek');
         weekDates = getWeekDates(displayedWeek);
+        //weekDates=> (7)[]:Date
         fullDateStrings = weekDates.map(item => getDateString(item));
-        activeUsers = users.filter(user => user.active);
-            users_id = activeUsers.map(user => user.id);
+        //fullDateStrings=> (7)[]:String('yyyy-mm-dd')
+        
         getConstraintsSchedule();
     }, [displayedWeek])
 
@@ -52,9 +51,9 @@ const MConstraints = (props) => {
             const dayData = []
             for (let i = 0; i < 3; i++) {
                 dayData.push({
-                    constraints: { open: [], close: [], favorite: [], null:[] },
+                    constraints: { open: [], close: [], favorite: [], null: [] },
                     schedule: { user_id: '', status: 'save' },
-                    time:shiftsTime[i]
+                    time: shiftsTime[i]
                 })
             }
             const day = {
@@ -68,7 +67,7 @@ const MConstraints = (props) => {
     }
 
     const getConstraintsSchedule = async () => {
-        const data = { status: 'all',user_id:users_id, date_start: fullDateStrings[0], date_end: fullDateStrings[6] }
+        const data = { status: 'all', user_id: users_id, date_start: fullDateStrings[0], date_end: fullDateStrings[6] }
         try {
             const constraints = await axios.post(
                 '/constraints/m/get',
@@ -77,20 +76,20 @@ const MConstraints = (props) => {
             )
 
 
-            console.log('mGetConstraints=>', constraints.data)
+            console.log('mGetConstraints=>', constraints.status)
 
             const schedule = await axios.get(
                 '/schedule',
-                {params:data},
+                { params: data },
                 { headers: { 'Content-Type': 'application/json' } }
             )
 
             setInitSchedule(schedule.data);
             console.log('mGetSchedule=>', schedule.data);
             schedule.data.forEach(shift => {
-                allScheduleData[shift.id]=shift
+                allScheduleData[shift.id] = shift
             });
-            console.log('allScheduleData=>',allScheduleData);
+            console.log('allScheduleData=>', allScheduleData);
             countShifts();
             mSetWeek(constraints.data, schedule.data)
         } catch (e) { console.log(e) }
@@ -103,9 +102,9 @@ const MConstraints = (props) => {
         console.log('mConstrains=>', constrains);
         for (let r of constrains) {
             // if(r.option!=null){
-                const { day, part, option, user_id, note } = r;
+            const { day, part, option, user_id, note } = r;
             // console.log('day, part, option, user_id', day, part, option, user_id);
-            week[day].data[part].constraints[option].push({user_id,note})
+            week[day].data[part].constraints[option].push({ user_id, note })
             // }
         }
         for (let r of schedule) {
@@ -116,35 +115,38 @@ const MConstraints = (props) => {
             const start = start_at || week[day].data[part].time.start_at;
             // console.log('start=>',start);
             const end = end_at || week[day].data[part].time.end_at;
-            week[day].data[part].time = { start_at:start, end_at:end }
+            week[day].data[part].time = { start_at: start, end_at: end }
 
         }
         console.log('mSetWeek=>', week);
         setWeekMConst(week)
     }
 
-    const countShifts = ()=>{
-        counter = {}
-        users.forEach(user=>counter[user.id]=[]);
-       
-        for(const shift in allScheduleData){
-            const shiftObj = allScheduleData[shift]
-            if(shiftObj.user_id != null){
-                counter[shiftObj.user_id].push(shiftObj.id)
-                
+    const countShifts = () => {
+        if (users && users.length > 0) {
+            const counter = {}
+            users.forEach(user => counter[user.id] = []);
+
+            for (const shift in allScheduleData) {
+                const shiftObj = allScheduleData[shift]
+                if (shiftObj.user_id != null && counter[shiftObj.user_id]) {
+                    console.log(shiftObj.user_id, counter[shiftObj.user_id], counter);
+                    counter[shiftObj.user_id].push(shiftObj.id)
+
+                }
             }
+            console.log('allScheduleData,counter=>', allScheduleData, counter);
+            setShiftCounterObj({ ...counter })
         }
-        console.log('allScheduleData,counter=>',allScheduleData,counter);
-        setShiftCounterObj(counter)
     }
 
-    
+
 
 
 
     //update changes in table:
     const handleShiftClick = (data) => {
-        console.log('handleShiftClick data =>',data);
+        console.log('handleShiftClick data =>', data);
         const { day, part, user_id, start_at, end_at } = data;
         // console.log('setDayConstraints=>',dayIndex,constaintsList);
         const scheduleId = `${getDateString(weekDates[day], true, true)}${part}`;
@@ -158,7 +160,7 @@ const MConstraints = (props) => {
         console.log('upsertScheduleData after update=>', upsertScheduleData);
     }
 
-    const changeWeek = ()=>{
+    const changeWeek = () => {
         const week = displayedWeek === 1 ? 0 : 1
         setDisplayedWeek(week)
     }
@@ -172,7 +174,7 @@ const MConstraints = (props) => {
             data.push(scheduleObj[schedule])
         }
         if (status === 'post') {
-            data.forEach(shift=>shift.status='post')
+            data.forEach(shift => shift.status = 'post')
             // for (let schedule of initSchedule) {
             //     if (!upsertScheduleData[schedule.id]) {
             //         data.push(schedule)
@@ -184,7 +186,7 @@ const MConstraints = (props) => {
             // console.log('saveSchedule post =>', data);
             msg = 'The shift schedule has been saved and posted successfully'
         }
-        console.log('data=>',data);
+        console.log('data=>', data);
         try {
             const response = await axios.post('schedule/upsert', data, {
                 headers: {
@@ -202,42 +204,38 @@ const MConstraints = (props) => {
         if (!user.id) {
             navigate('/login')
         }
-            else{
-            activeUsers = users.filter(user => user.active);
-            users_id = activeUsers.map(user => user.id);
-            console.log('activeUsers=>', activeUsers);
-            console.log('users_id=>', users_id);
+        else {
             getConstraintsSchedule();
-            }
+        }
     }, []);
 
-    return (<div style={{display:'flex'}}>
+    return (<div style={{ display: 'flex' }}>
         {/* <h1>Constreaints Table</h1> */}
-        <SideBar shiftCounterObj={shiftCounterObj} style={{width:'18vw'}}/>
+        <SideBar shiftCounterObj={shiftCounterObj} style={{ width: '18vw' }} />
         <div className='m_table'>
-        <div className='table'>
-            <Week type='mConstraints'
-                initWeek={weekMConst}
-                handleShiftClick={handleShiftClick} />
-        </div>
-        <Button onClick={changeWeek}>{displayedWeek===0? 'Next Week' : 'This week'}</Button>
-        <div>
-            {displayedWeek===1 ? 
-             <Button onClick={saveSchedule}>Save</Button>
-            : ''}
-             <Button onClick={() => saveSchedule('post')}>Save and Post</Button>          
-        </div>
-        </div>
-        {/* {
-            colorArray.map(color=>
+            <div className='table'>
+                <Week type='mConstraints'
+                    initWeek={weekMConst}
+                    handleShiftClick={handleShiftClick} />
+            </div>
+            <Button onClick={changeWeek}>{displayedWeek === 0 ? 'Next Week' : 'This week'}</Button>
             <div>
-                <p style={{backgroundColor:color}}>color</p>
-                <p style={{backgroundColor:`${color}50`}}>color</p>
-                </div>
-        )
-        } */}
+                {displayedWeek === 1 ?
+                    <Button onClick={saveSchedule}>Save</Button>
+                    : ''}
+                <Button onClick={() => saveSchedule('post')}>Save and Post</Button>
+            </div>
+        </div>
     </div>)
 }
 
 export default MConstraints
+
+
+// activeUsers = users.filter(user => user.active);
+//         users_id = activeUsers.map(user => user.id);
+// activeUsers = users.filter(user => user.active);
+            // users_id = activeUsers.map(user => user.id);
+            // console.log('activeUsers=>', activeUsers);
+            // console.log('users_id=>', users_id);
 

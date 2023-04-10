@@ -1,14 +1,18 @@
 import { useState, useContext, useEffect } from 'react';
+import axios from 'axios';
 import { AppContext } from '../../../App';
+import { ManagerContext } from '../../../App';
 import MConstraintsOption from './MConstraintsOption';
 import '../Week.css';
 import { Input, TextField, Stack } from '@mui/material';
+import getShiftId from '../../../utils/getShiftId';
+import getDateString from '../../../utils/getDateString';
 
 
 const MConstraintsShift = (props) => {
-    const { part, data, changeOption } = props;
+    const { part, data, date, changeOption } = props;
     const { constraints, schedule, time } = data;
-    const id = schedule.user_id===''?'empty':schedule.user_id
+    const id = schedule.user_id === '' ? 'empty' : schedule.user_id
     // console.log(schedule.user_id==='',id);
     const [selected, setSelected] = useState
         (schedule.user_id);
@@ -16,11 +20,13 @@ const MConstraintsShift = (props) => {
     const [end_at, setEnd_at] = useState(time.end_at)
     const [fullConstraints, setFullConstraints] = useState(constraints);
     const [color, setColor] = useState('');
+    const [shiftId] = useState(getShiftId(date, part));
 
     const options = ['open', 'favorite', 'null', 'close'];
 
 
-    const { users,usersObj } = useContext(AppContext);
+    const { users, usersObj } = useContext(AppContext);
+    const { allScheduleData, upsertScheduleData } = useContext(ManagerContext)
     const activeUsers = users.filter(user => user.active);
     // console.log('usersObj=>',usersObj,'selected=>',selected,'usersObj["empty"].name=>',usersObj['empty'].name,'schedule.user_id=>',schedule.user_id==='');
 
@@ -54,51 +60,74 @@ const MConstraintsShift = (props) => {
         setEnd_at(e.target.value)
         handleChange(selected, start_at, e.target.value)
     }
-    
+
 
     const handleChange = (selected, start_at, end_at) => {
         console.log('changeOption=>', { part, user_id: selected, start_at, end_at });
         changeOption({ part, user_id: selected, start_at, end_at });
+        upsertShift(selected,start_at,end_at);
     }
 
     const sendWhatsapp = (emp) => {
         props.sendWhatsapp(emp, part)
     }
 
-    useEffect(addNullConstraint, []);
-
-   
-
-    useEffect(() => {
-        if (usersObj[selected]) {
-            setColor(usersObj[selected].color)
-        }else{
-            setColor('')
+    const upsertShift = async (userId,start_at,end_at) => {
+        const user_id = userId || null
+        console.log(user_id);
+        const shift = {
+            id: shiftId,
+            user_id,
+            date: getDateString(date),
+            day: date.getDay(),
+            part, start_at, end_at
         }
-    }, [selected])
+        try {
+            const response = await axios.post('schedule/upsert', [shift], {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            console.log('upsertSchedule=>', response.data);
+        } catch (e) {
+            console.log('upsertSchedule error=>', e)
+        }
+    }
 
-    return (
-        <div className={`cell part`} style={{ height: 300 }}>
-            <TextField style={{ height: 40 }} label='Start' type='time' value={start_at} onChange={changeStartTime} inputProps={{ step: 300 }} />
-            <TextField style={{ height: 40 }} label='End' type='time' value={end_at} onChange={changeEndTime} inputProps={{ step: 300 }} />
-            
-            <h3 className='m_shift_selected' onClick={() => onSelect(null)} style={{ backgroundColor: color }}>{usersObj[selected] ? usersObj[selected].name : ''}</h3>
-            {/* <h3 className='m_shift_selected' onClick={() => onSelect(null)} style={{ backgroundColor: color }}>{selected ? usersObj[selected].name : ''}</h3> */}
-            {
-                ['open', 'favorite'].map((option, index) => <MConstraintsOption key={index} option={option} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />)
+        useEffect(addNullConstraint, []);
+
+
+
+        useEffect(() => {
+            if (usersObj[selected]) {
+                setColor(usersObj[selected].color)
+            } else {
+                setColor('')
             }
-            <Stack direction="row" spacing={2}>
-                
-            {
-                ['null', 'close'].map((option, index) => <MConstraintsOption key={index} option={option} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />)
-            }
-        
-            </Stack>
-            
+        }, [selected])
 
-        </div>
-    )
+        return (
+            <div className={`cell part`} style={{ height: 300 }}>
+                <TextField style={{ height: 40 }} label='Start' type='time' value={start_at} onChange={changeStartTime} inputProps={{ step: 300 }} />
+                <TextField style={{ height: 40 }} label='End' type='time' value={end_at} onChange={changeEndTime} inputProps={{ step: 300 }} />
 
-}
+                <h3 className='m_shift_selected' onClick={() => onSelect(null)} style={{ backgroundColor: color }}>{usersObj[selected] ? usersObj[selected].name : ''}</h3>
+                {/* <h3 className='m_shift_selected' onClick={() => onSelect(null)} style={{ backgroundColor: color }}>{selected ? usersObj[selected].name : ''}</h3> */}
+                {
+                    ['open', 'favorite'].map((option, index) => <MConstraintsOption key={index} option={option} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />)
+                }
+                <Stack direction="row" spacing={2}>
 
-export default MConstraintsShift;
+                    {
+                        ['null', 'close'].map((option, index) => <MConstraintsOption key={index} option={option} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />)
+                    }
+
+                </Stack>
+
+
+            </div>
+        )
+
+    }
+
+    export default MConstraintsShift;
