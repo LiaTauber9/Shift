@@ -17,13 +17,11 @@ const MConstraints = (props) => {
     const { user, users } = useContext(AppContext);
     const { allScheduleData, upsertScheduleData } = useContext(ManagerContext)
     const [weekMConst, setWeekMConst] = useState([]);
-    const [initSchedule, setInitSchedule] = useState([]);
     const [displayedWeek, setDisplayedWeek] = useState(1);
 
 
     const [shiftCounterObj, setShiftCounterObj] = useState(null);
-    let activeUsers;
-    let users_id;
+    
 
 
 
@@ -67,6 +65,7 @@ const MConstraints = (props) => {
     }
 
     const getConstraintsSchedule = async () => {
+        const users_id = users.map(user=>user.id);
         const data = { status: 'all', user_id: users_id, date_start: fullDateStrings[0], date_end: fullDateStrings[6] }
         try {
             const constraints = await axios.post(
@@ -76,7 +75,7 @@ const MConstraints = (props) => {
             )
 
 
-            console.log('mGetConstraints=>', constraints.status)
+            console.log('mGetConstraints=>', constraints.status, constraints.data)
 
             const schedule = await axios.get(
                 '/schedule',
@@ -84,7 +83,7 @@ const MConstraints = (props) => {
                 { headers: { 'Content-Type': 'application/json' } }
             )
 
-            setInitSchedule(schedule.data);
+            // setInitSchedule(schedule.data);
             console.log('mGetSchedule=>', schedule.data);
             schedule.data.forEach(shift => {
                 allScheduleData[shift.id] = shift

@@ -7,6 +7,7 @@ import '../Week.css';
 import { Input, TextField, Stack } from '@mui/material';
 import getShiftId from '../../../utils/getShiftId';
 import getDateString from '../../../utils/getDateString';
+import './MConstraints.css';
 
 
 const MConstraintsShift = (props) => {
@@ -106,15 +107,40 @@ const MConstraintsShift = (props) => {
             }
         }, [selected])
 
+        // MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root
+
+        // MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input
+
+        // .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root
+
         return (
             <div className={`cell part`} style={{ height: 300 }}>
-                <TextField style={{ height: 40 }} label='Start' type='time' value={start_at} onChange={changeStartTime} inputProps={{ step: 300 }} />
-                <TextField style={{ height: 40 }} label='End' type='time' value={end_at} onChange={changeEndTime} inputProps={{ step: 300 }} />
+                {/* <TextField className='my-color'
+                sx={{
+                    '& .MuiInputBase-root': {
+                        color: 'red',
+                        height:20
+                      },
+                }}
+                type='time' value={start_at} onChange={changeStartTime} inputProps={{ step: 300 }} />
+                <TextField style={{ height: 40 }} label='' type='time' value={end_at} onChange={changeEndTime} inputProps={{ step: 300 }} /> */}
+                {
+                    [start_at,end_at].map((time,index)=>
+                    <TextField className='my-color'
+                    sx={{
+                        '& .MuiInputBase-root': {
+                            height:20,
+                            margin:1
+                          },
+                    }}
+                    key={index} type='time' value={time} onChange={changeStartTime} inputProps={{ step: 300 }} />
+                    )
+                }
 
                 <h3 className='m_shift_selected' onClick={() => onSelect(null)} style={{ backgroundColor: color }}>{usersObj[selected] ? usersObj[selected].name : ''}</h3>
                 {/* <h3 className='m_shift_selected' onClick={() => onSelect(null)} style={{ backgroundColor: color }}>{selected ? usersObj[selected].name : ''}</h3> */}
                 {
-                    ['open', 'favorite'].map((option, index) => <MConstraintsOption key={index} option={option} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />)
+                    ['favorite','open'].map((option, index) => <MConstraintsOption key={index} option={option} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />)
                 }
                 <Stack direction="row" spacing={2}>
 
