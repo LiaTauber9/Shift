@@ -12,12 +12,12 @@ const Week = (props) => {
     return (
         <div className='table'>
             {
-                initWeek.map((day,index)=>
+                initWeek.map((date,index)=>
                     <Day 
                     key={index} 
                     type={type} 
                     day={index} 
-                    dayData={day} 
+                    date={date} 
                     handleShiftClick={handleShiftClick} 
                     />
                 )

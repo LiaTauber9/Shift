@@ -13,6 +13,7 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import './App.css';
 
 export const AppContext = createContext(null);
+export const WeekContext = createContext(null);
 export const ManagerContext = createContext(null);
 
 function App() {
@@ -20,25 +21,31 @@ function App() {
   const [user, setUser] = useState('');
   const [users, setUsers] = useState([]);
   const [usersObj, setUsersObj] = useState({});
+  const [constraintsObj, setConstraintsObj] = useState({});
+  const [scheduleObj, setScheduleObj] = useState({});
   const [allScheduleData, setAllScheduleData] = useState({});
   const [upsertScheduleData, setUpsertScheduleData] = useState({});
+
+
   return (
     <BrowserRouter>
-      <AppContext.Provider value={{ token, setToken, user, setUser, users, setUsers, usersObj, setUsersObj }}>
-      <ManagerContext.Provider value={{allScheduleData, setAllScheduleData, upsertScheduleData, setUpsertScheduleData}}>
-        <div className="App">
-          <Nav />
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/profile' element={<Profile />} />
-            <Route path='/login' element={<LoginForm />} />
-            <Route path='/register' element={<RegisterForm />} />          
-              <Route path='/mconstraints' element={<MConstraints type='manager' />} />
-            <Route path='/constraints' element={<Auth> <Constraints type='employee' /> </Auth>} />
-            <Route path='/schedule' element={<Schedule />} />
-          </Routes>
-        </div>
-        </ManagerContext.Provider>
+      <AppContext.Provider value={{ token, setToken, user, setUser, users, setUsers, usersObj, setUsersObj, }}>
+        <WeekContext.Provider value={{ constraintsObj, setConstraintsObj, scheduleObj, setScheduleObj }}>
+          <ManagerContext.Provider value={{ allScheduleData, setAllScheduleData, upsertScheduleData, setUpsertScheduleData }}>
+            <div className="App">
+              <Nav />
+              <Routes>
+                <Route path='/' element={<Home />} />
+                <Route path='/profile' element={<Profile />} />
+                <Route path='/login' element={<LoginForm />} />
+                <Route path='/register' element={<RegisterForm />} />
+                <Route path='/mconstraints' element={<MConstraints type='manager' />} />
+                <Route path='/constraints' element={<Auth> <Constraints type='employee' /> </Auth>} />
+                <Route path='/schedule' element={<Schedule />} />
+              </Routes>
+            </div>
+          </ManagerContext.Provider>
+        </WeekContext.Provider>
       </AppContext.Provider>
     </BrowserRouter>
   );

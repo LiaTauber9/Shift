@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import axios from 'axios';
 import { AppContext } from '../../../App'
-import getWeekDates from '../../../utils/getWeekDates';
-import getDateString from '../../../utils/getDateString';
+import {getWeekDates, getDateString} from '../../../utils/week_utils';
 import Week from '../Week';
 import '../Week.css';
 
