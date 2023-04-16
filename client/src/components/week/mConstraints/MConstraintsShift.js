@@ -11,7 +11,7 @@ import './MConstraints.css';
 
 const MConstraintsShift = (props) => {
 
-    const { part, date, changeSchedule } = props;
+    const { part, date, handleClick } = props;
     const shiftId = getShiftId(date,part);
     const { users, usersObj } = useContext(AppContext);
     const { constraintsObj, scheduleObj} = useContext(WeekContext);
@@ -47,26 +47,20 @@ const MConstraintsShift = (props) => {
     }
 
     const initSchedule = ()=>{
-        console.log(scheduleObj[shiftId],shiftId);
         if(scheduleObj[shiftId]){
-            console.log('initSchedule');
             const {user_id,start_at,end_at} = scheduleObj[shiftId]
             const {name, color} = usersObj[user_id] ? usersObj[user_id] : schedule
-           console.log(user_id,start_at,end_at,name, color);
-            let newSchedule = {...schedule,user_id,start_at,end_at};
-            // if(scheduleObj[shiftId].user_id){
-                // const {name,color} = usersObj[user_id];
-                // newSchedule = {...newSchedule,name,color}
-            // }
-            // console.log('newSchedule=>',newSchedule);                        
-            // setSchedule(newSchedule)
+            setSchedule({user_id,name,color,start_at,end_at})
         }
+    }
+
+    const changeSchedule = (e, key)=>{
+        alert(e.target.value,key)
     }
 
     useEffect(()=>{
         initConstraints();
         initSchedule();
-
     },[])
 
 
@@ -174,10 +168,10 @@ const MConstraintsShift = (props) => {
 
         return (
             <div className={`cell part`} style={{ height: 300 }}>
-                <p>{shiftId}</p>
-                <p>{scheduleObj[shiftId]?scheduleObj[shiftId].part : ''}</p>
-                {/* {
-                    [start_at,end_at].map((time,index)=>
+                {/* <p>{shiftId}</p>
+                <p>{scheduleObj[shiftId]?scheduleObj[shiftId].part : ''}</p> */}
+                {
+                    ['start_at', 'end_at'].map((time,index)=>
                     <TextField className='my-color'
                     sx={{
                         '& .MuiInputBase-root': {
@@ -185,11 +179,11 @@ const MConstraintsShift = (props) => {
                             margin:1
                           },
                     }}
-                    key={index} type='time' value={time} onChange={changeStartTime} inputProps={{ step: 300 }} />
+                    key={index} type='time' value={schedule[time]} onChange={(e)=>changeSchedule(e,time)} inputProps={{ step: 300 }} />
                     )
                 }
 
-                <h3 className='m_shift_selected' onClick={() => onSelect(null)} style={{ backgroundColor: color }}>{usersObj[selected] ? usersObj[selected].name : ''}</h3>
+                {/* <h3 className='m_shift_selected' onClick={() => onSelect(null)} style={{ backgroundColor: color }}>{usersObj[selected] ? usersObj[selected].name : ''}</h3>
                 {
                     ['favorite','open'].map((option, index) => <MConstraintsOption key={index} option={option} employees={fullConstraints[option]} onSelect={onSelect} sendWhatsapp={sendWhatsapp} />)
                 }
