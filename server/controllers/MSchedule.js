@@ -24,7 +24,7 @@ export const upsertSchedule = async(req,res)=>{
     res.json({msg:'upsert schedule succeed'})
     }catch(e){
         console.log('upsertSchedule error=>',e);
-        res.json({msg:'upsert schedule error'})
+        res.status(e.status).json({msg:'upsert schedule error'});
     }
     
 
