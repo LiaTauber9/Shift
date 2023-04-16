@@ -54,8 +54,36 @@ const MConstraintsShift = (props) => {
         }
     }
 
-    const changeSchedule = (e, key)=>{
-        alert(e.target.value,key)
+    const changeTime = (e, key)=>{
+        
+    }
+
+    const updateSchedule = (shift)=>{
+
+    }
+
+    const upsertShift = async (userId,start_at,end_at) => {
+        const user_id = userId || null
+        console.log(user_id);
+        const shift = {
+            id: shiftId,
+            user_id,
+            date: getDateString(date),
+            day: date.getDay(),
+            part, start_at, end_at
+        }
+        try {
+            const response = await axios.post('schedule/upsert', [shift], {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            console.log('upsertSchedule=>', response.data);
+            // updateSchedule(shift);
+        } catch (e) {
+            console.log('upsertSchedule error=>', e)
+            alert("Couldn't save changes, Please check your conection")
+        }
     }
 
     useEffect(()=>{
@@ -179,7 +207,7 @@ const MConstraintsShift = (props) => {
                             margin:1
                           },
                     }}
-                    key={index} type='time' value={schedule[time]} onChange={(e)=>changeSchedule(e,time)} inputProps={{ step: 300 }} />
+                    key={index} type='time' value={schedule[time]} onChange={(e)=>changeTime(e,time)} inputProps={{ step: 300 }} />
                     )
                 }
 
