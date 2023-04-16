@@ -26,7 +26,7 @@ const Day = (props) => {
             [0,1,2].map(part=> <ScheduleShift key={part} date={date} part={part} handleClick={handleClick} />)
             : type === 'constraints' ?
             [0,1,2].map(part=><ConstraintsShift key={part} date={date} part={part} handleClick={handleClick} />)
-            : [0,1,2].map(part=><MConstraintsShift key={part} date={date} part={part} handleClick={handleClick}/>)
+            : [0,1,2].map(part=><MConstraintsShift key={part} date={date} part={part} changeSchedule={handleClick}/>)
         }
         </div>
         
