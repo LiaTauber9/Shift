@@ -5,39 +5,86 @@ import MConstraintsOption from './MConstraintsOption';
 import '../Week.css';
 import { Input, TextField, Stack } from '@mui/material';
 import {getShiftId, getDateString} from '../../../utils/week_utils';
+import { shiftsTime } from '../../../config/shiftsConfig';
 import './MConstraints.css';
 
 
 const MConstraintsShift = (props) => {
+
     const { part, date, changeSchedule } = props;
-    const shiftId = getShiftId(date,part); 
-    // const { part, data, date, changeOption } = props;
+    const shiftId = getShiftId(date,part);
+    const { users, usersObj } = useContext(AppContext);
+    const { constraintsObj, scheduleObj} = useContext(WeekContext);
+
+   
+    const [selected, setSelected] = useState('');
+    const [constraints, setConstraints]= useState(null);
+    const [schedule, setSchedule] = useState({
+        user_id:null,
+        name: null,
+        color:null,
+        start_at:shiftsTime[part].start_at,
+        end_at:shiftsTime[part].end_at
+    });
+
+    const initConstraints = ()=>{
+        const constraints = {};
+        const options = ['favorite','open','unselected','close'];
+        options.forEach(option=>constraints[option]=[])
+        for(const user of users){
+            const id = user.id+shiftId;
+            const row = constraintsObj[id]
+            if(row){
+                const option = row.option || 'unselected';
+                const {user_id,note} = row; 
+                // console.log("option,constraints[option]=>",option,constraints[option]);
+                constraints[option].push({user_id,note});
+            }else{
+                constraints.unselected.push({user_id:user.id,note:null})
+            }
+        }
+        setConstraints(constraints)
+    }
+
+    const initSchedule = ()=>{
+        console.log(scheduleObj[shiftId],shiftId);
+        if(scheduleObj[shiftId]){
+            console.log('initSchedule');
+            const {user_id,start_at,end_at} = scheduleObj[shiftId]
+            const {name, color} = usersObj[user_id] ? usersObj[user_id] : schedule
+           console.log(user_id,start_at,end_at,name, color);
+            let newSchedule = {...schedule,user_id,start_at,end_at};
+            // if(scheduleObj[shiftId].user_id){
+                // const {name,color} = usersObj[user_id];
+                // newSchedule = {...newSchedule,name,color}
+            // }
+            // console.log('newSchedule=>',newSchedule);                        
+            // setSchedule(newSchedule)
+        }
+    }
+
+    useEffect(()=>{
+        initConstraints();
+        initSchedule();
+
+    },[])
+
+
+
+     // const { part, data, date, changeOption } = props;
     // const { constraints, schedule, time } = data;
     // const id = schedule.user_id === '' ? 'empty' : schedule.user_id
     // console.log(schedule.user_id==='',id);
-    const [selected, setSelected] = useState('');
-    const [constraints, setConstraints]= useState(null);
-    const getConstraints = ()=>{
-        const constraints = {};
-        const options = ['favorite','open','pending','close'];
-        for(const user of users){
-            const id = user.id+shiftId;
-            console.log('constraint id=>',id);
-        }
-    }
         
     // const [start_at, setStart_at] = useState(time.start_at)
     // const [end_at, setEnd_at] = useState(time.end_at)
     // const [fullConstraints, setFullConstraints] = useState(constraints);
-    const [color, setColor] = useState('');
     
 
-    const options = ['open', 'favorite', 'null', 'close'];
+    
 
 
-    const { users, usersObj } = useContext(AppContext);
-    const { constraintsObj, scheduleObj} = useContext(WeekContext);
-
+    
 
     // const { allScheduleData, upsertScheduleData } = useContext(ManagerContext)
     // const activeUsers = users.filter(user => user.active);
