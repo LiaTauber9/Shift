@@ -89,7 +89,7 @@ const MConstraintsShift = (props) => {
                     'Content-Type': 'application/json'
                 }
             })
-            console.log('upsertSchedule=>', response.data);
+            console.log('upsertSchedule=>', response.data, response.status);
         } catch (e) {
             console.log('upsertSchedule error=>', e)
         }
