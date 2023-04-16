@@ -133,7 +133,7 @@ const MConstraintsShift = (props) => {
                             margin:1
                           },
                     }}
-                    key={index} type='time' value={time} onChange={changeStartTime} inputProps={{ step: 300 }} />
+                    key={index} type='time' value={time} onChange={index==0 ? changeStartTime : changeEndTime} inputProps={{ step: 300 }} />
                     )
                 }
 
