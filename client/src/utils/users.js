@@ -14,7 +14,7 @@ export const getUsersObj = (usersArr)=>{
         role: "1",
         color: "",
         active: true,
-        name: "1",
+        name: "",
         avatar_name:"1"
     }
     return usersObj

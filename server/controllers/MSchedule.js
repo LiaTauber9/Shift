@@ -24,7 +24,7 @@ export const upsertSchedule = async(req,res)=>{
     res.json({msg:'upsert schedule succeed'})
     }catch(e){
         console.log('upsertSchedule error=>',e);
-        res.json({msg:'upsert schedule error'})
+        res.status(e.status||404).json({msg:'upsert schedule error'})
     }
     
 
@@ -72,7 +72,7 @@ export const getSchedule = async (req, res) => {
         // console.log(existsShifts);
         res.json(existsSchedule)
     } catch (e) {
-        res.json({ msg: 'error' })
+        res.status(e.status||404).json({ msg: 'error' })
     }
 }
 export const getPostedSchedule = async (req, res) => {
@@ -97,7 +97,7 @@ export const getPostedSchedule = async (req, res) => {
         // console.log(existsShifts);
         res.json(existsSchedule)
     } catch (e) {
-        res.json({ msg: 'error' })
+        res.status(e.status||404).json({ msg: 'error' })
     }
 }
 // export const mGetConstraints = async (req, res) => {

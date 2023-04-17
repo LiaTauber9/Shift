@@ -75,7 +75,6 @@ const MConstraints = (props) => {
             for (const shift in scheduleObj) {
                 const shiftObj = scheduleObj[shift]
                 if (shiftObj.user_id != null && counter[shiftObj.user_id]) {
-                    console.log(shiftObj.user_id, counter[shiftObj.user_id], counter);
                     counter[shiftObj.user_id].push(shiftObj.id)
 
                 }

@@ -26,10 +26,12 @@
     height: 80px;
     border: 3px solid black;
     text-align: center;
+    margin-bottom: 5px;
 }
 
 .header{
-    background-color: yellow;
+    background-color: rgb(217, 217, 209);
+    height: 40px;
 }
 
 .part{
@@ -46,8 +48,9 @@
 
 .m_shift_selected{
     width: 100%;
-    min-height: 20px;
+    height: 30px;
     border: 3px dotted;
+    color: white;
 }
 
 .close{
