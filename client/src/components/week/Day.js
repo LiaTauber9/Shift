@@ -5,7 +5,7 @@ import './Week.css'
 import ConstraintsShift from "./constraints/ConstraintShift";
 
 const Day = (props) => {
-    const { type, day, date, handleShiftClick } = props;
+    const { type, day, date, handleShiftClick, shiftFormat } = props;
     
     // const data = dayData.data;
     // const date = dayData.date
@@ -23,10 +23,10 @@ const Day = (props) => {
             {dayList[day]} / {dateString}
         </div>
             {type === 'schedule' ?
-            [0,1,2].map(part=> <ScheduleShift key={part} date={date} part={part} handleClick={handleClick} />)
+            [0,1,2].map(part=> <ScheduleShift key={part} date={date} part={part} handleClick={handleClick} shiftFormat={shiftFormat} />)
             : type === 'constraints' ?
-            [0,1,2].map(part=><ConstraintsShift key={part} date={date} part={part} handleClick={handleClick} />)
-            : [0,1,2].map(part=><MConstraintsShift key={part} date={date} part={part} handleClick={handleClick}/>)
+            [0,1,2].map(part=><ConstraintsShift key={part} date={date} part={part} handleClick={handleClick} shiftFormat={shiftFormat} />)
+            : [0,1,2].map(part=><MConstraintsShift key={part} date={date} part={part} handleClick={handleClick} shiftFormat={shiftFormat} />)
         }
         </div>
         

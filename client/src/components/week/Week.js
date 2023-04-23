@@ -4,7 +4,7 @@ import Day from './Day';
 import './Week.css'
 
 const Week = (props) => {
-    const { type, initWeek, handleShiftClick } = props;
+    const { type, initWeek, handleShiftClick, shiftFormat } = props;
     const { user } = useContext(AppContext);
     console.log('week component initWeek=>',initWeek);
 
@@ -18,7 +18,8 @@ const Week = (props) => {
                     type={type} 
                     day={index} 
                     date={date} 
-                    handleShiftClick={handleShiftClick} 
+                    handleShiftClick={handleShiftClick}
+                    shiftFormat={shiftFormat} 
                     />
                 )
             }

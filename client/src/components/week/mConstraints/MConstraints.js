@@ -116,7 +116,7 @@ const MConstraints = (props) => {
 
     const addNullSchedules = (schedule)=>{
         for(const date of weekDates){
-            for(const part = 0; part<3; part++){
+            for(let part = 0; part<3; part++){
                 const shiftId = getShiftId(date,part);
                 if(!schedule[shiftId]){
                     const row = getScheduleRow(date,part,'post');
@@ -128,7 +128,50 @@ const MConstraints = (props) => {
 
 
 
-    // let weekDates = getWeekDates(displayedWeek); //=>array of Date-Obj of next week
+   
+    
+
+    useEffect(() => {
+        if (!user.id) {
+            navigate('/login')
+        }
+        else {
+            getConstraintsSchedule();
+        }
+    }, [displayedWeek])
+
+    return (        
+            weekDates ?
+            
+            <div style={{ display: 'flex' }}>
+        {/* <h1>Constreaints Table</h1> */}
+        <SideBar shiftCounterObj={shiftCounterObj} style={{ width: '18vw' }} />
+        <div className='m_table'>
+            <div className='table'>
+                <Week type='mConstraints'
+                    initWeek={weekDates}
+                    handleShiftClick={handleScheduleChange}
+                    shiftFormat={null} />
+            </div>
+            {/* <Button onClick={changeWeek}>{displayedWeek === 0 ? 'Next Week' : 'This week'}</Button> */}
+            <div>
+                <Button onClick={() => postSchedule()}>Save and Post</Button>
+            </div>
+        </div>
+    </div>
+
+    : '' 
+    
+    )
+}
+
+export default MConstraints
+
+
+
+
+
+ // let weekDates = getWeekDates(displayedWeek); //=>array of Date-Obj of next week
     // let fullDateStrings = weekDates.map(item => getDateString(item)); //=>array of String-format-date:'yyyy-mm-dd'
     // const allScheduleData = {};
     // const upsertScheduleData = {};
@@ -242,42 +285,6 @@ const MConstraints = (props) => {
         // }
     
 
-    
-
-    useEffect(() => {
-        if (!user.id) {
-            navigate('/login')
-        }
-        else {
-            getConstraintsSchedule();
-        }
-    }, [displayedWeek])
-
-    return (        
-            weekDates ?
-            
-            <div style={{ display: 'flex' }}>
-        {/* <h1>Constreaints Table</h1> */}
-        <SideBar shiftCounterObj={shiftCounterObj} style={{ width: '18vw' }} />
-        <div className='m_table'>
-            <div className='table'>
-                <Week type='mConstraints'
-                    initWeek={weekDates}
-                    handleShiftClick={handleScheduleChange} />
-            </div>
-            {/* <Button onClick={changeWeek}>{displayedWeek === 0 ? 'Next Week' : 'This week'}</Button> */}
-            <div>
-                <Button onClick={() => postSchedule()}>Save and Post</Button>
-            </div>
-        </div>
-    </div>
-
-    : '' 
-    
-    )
-}
-
-export default MConstraints
 
 
 

@@ -16,16 +16,18 @@ const MConstraintsShift = (props) => {
     const { constraintsObj, scheduleObj} = useContext(WeekContext);
 
     const [shiftId] = useState(getShiftId(date,part));
-    const [constraints, setConstraints]= useState(null);
+    const [defaultTime] = useState({
+        start_at:shiftsTime[part].start_at,
+        end_at:shiftsTime[part].end_at
+    })
+    const [time, setTime] = useState(defaultTime);
     const [selected, setSelected] = useState({
         user_id:null,
         name: null,
         color:null,
     });
-    const [time, setTime] = useState({
-        start_at:shiftsTime[part].start_at,
-        end_at:shiftsTime[part].end_at
-    })
+    const [constraints, setConstraints]= useState(null);
+   
 
     const initConstraints = ()=>{
         const constraints = {};
@@ -54,6 +56,26 @@ const MConstraintsShift = (props) => {
             setSelected({user_id,name,color});
             setTime({start_at,end_at});
         }
+    }
+
+    const setTimeStyle = (timeKey,timeVal)=>{
+        const defaultStyle = {
+                height:20,
+                margin:1,
+        }
+        const changeStyle =  {...defaultStyle,background:'rgb(217, 217, 209)'}
+        const match = defaultTime[timeKey]===timeVal;
+        // const match = defaultTime[timeKey]===timeVal || `${defaultTime[timeKey]}:00`==`${timeVal}`
+        // console.log(defaultTime[timeKey],timeVal, match, );
+        return { '& .MuiInputBase-root': match ? defaultStyle : changeStyle} 
+        // object for sx property => 
+        //{
+        //     '& .MuiInputBase-root': {
+        //         height:20,
+        //         margin:1,
+        //         background:'rgb(217, 217, 209)'  // ? optional 
+        //       },
+        // }      
     }
 
     const changeTime = (e, key)=>{
@@ -132,12 +154,7 @@ const MConstraintsShift = (props) => {
                 {
                     ['start_at', 'end_at'].map((timeKey,index)=>
                     <TextField className='my-color'
-                    sx={{
-                        '& .MuiInputBase-root': {
-                            height:20,
-                            margin:1
-                          },
-                    }}
+                    sx={setTimeStyle(timeKey, time[timeKey])}
                     key={index} type='time' value={time[timeKey]} onChange={(e)=>changeTime(e,timeKey)} inputProps={{ step: 300 }} />
                     )
                 }

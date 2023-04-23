@@ -25,9 +25,6 @@ const MConstraintsOption = (props) => {
 
     }
 
-    // console.log('usersObj MConstraintsOption',usersObj);
-    // const optionColor = {open:'blue',close:'red',favorite:'green'}
-
     return (
         props.option === 'close' || props.option === 'unselected' ?
             <div>
