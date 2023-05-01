@@ -20,10 +20,10 @@ import { height } from "@mui/system";
 
 
 const Home = ()=>{
-    // return (           
-    //     <h1>Home</h1>       
-    // )
-
+    return (           
+        <h1>Home</h1>       
+    )
+}
     // return (
     //     <div>
     //       <Accordion>
@@ -45,7 +45,7 @@ const Home = ()=>{
     //   );
 
 
-    const MyAcordion = styled(Accordion)({
+    // const MyAcordion = styled(Accordion)({
     //       '&::before': {
     //         height: 30,
     //     },
@@ -57,90 +57,90 @@ const Home = ()=>{
         //     // }
         // },
         
-        height:15,
-        display:'flex',
-        justifyContent:'center'
-    }
-    );
+    //     height:15,
+    //     display:'flex',
+    //     justifyContent:'center'
+    // }
+    // );
 
 
-    const StyledAccordion = styled(Accordion)(({ theme }) => ({
-        '& .MuiAccordionSummary-root': {
-          marginBottom: theme.spacing(1),
-        },
-        '& .MuiAccordionDetails-root': {
-          flexDirection: 'column-reverse',
-        },
-      }));
+    // const StyledAccordion = styled(Accordion)(({ theme }) => ({
+    //     '& .MuiAccordionSummary-root': {
+    //       marginBottom: theme.spacing(1),
+    //     },
+    //     '& .MuiAccordionDetails-root': {
+    //       flexDirection: 'column-reverse',
+    //     },
+    //   }));
 
 
 
 
 
-    const MyAAccordionSummary = styled(AccordionSummary)({
+    // const MyAAccordionSummary = styled(AccordionSummary)({
 
-        '& .MuiAccordionSummary-content': {
-            justifyContent: 'center',
-          },
-          '& .MuiIconButton-root': {
-            position: 'absolute',
-            right: 16,
-          },
+    //     '& .MuiAccordionSummary-content': {
+    //         justifyContent: 'center',
+    //       },
+    //       '& .MuiIconButton-root': {
+    //         position: 'absolute',
+    //         right: 16,
+    //       },
 
-          '&.Mui-expanded': {
-            minHeight: '15px', // set custom minHeight when expanded
-          },
+    //       '&.Mui-expanded': {
+    //         minHeight: '15px', // set custom minHeight when expanded
+    //       },
 
 
-        height:15,
-       minHeight:15,
-       alignItems:'center',
-       justifyContent:'center',
-       width:'30px',
+    //     height:15,
+    //    minHeight:15,
+    //    alignItems:'center',
+    //    justifyContent:'center',
+    //    width:'30px',
      
-      '&.MuiAccordionSummary-root': {
-        '& .MuiButtonBase-root': {
-          width: '30px',
-        },
-        '& .MuiPaper-root':{
-            display:'flex',
-            justifyContent:'center',
-            alignItems:'center'
-        },
-        '& .MuiAccordionSummary-content': {
-            width: '30px',
-          fontSize: '16px', // set the font size to 16px
-        },
-      },
-    })
+    //   '&.MuiAccordionSummary-root': {
+    //     '& .MuiButtonBase-root': {
+    //       width: '30px',
+    //     },
+    //     '& .MuiPaper-root':{
+    //         display:'flex',
+    //         justifyContent:'center',
+    //         alignItems:'center'
+    //     },
+    //     '& .MuiAccordionSummary-content': {
+    //         width: '30px',
+    //       fontSize: '16px', // set the font size to 16px
+    //     },
+    //   },
+    // })
 
-      const MyAccordionDetails = styled(AccordionDetails)({
-        padding: '16px 0px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 7,
-          color:'red'
-      })
+    //   const MyAccordionDetails = styled(AccordionDetails)({
+    //     padding: '16px 0px',
+    //       display: 'flex',
+    //       flexDirection: 'column',
+    //       gap: 7,
+    //       color:'red'
+    //   })
       
 
     // const classes = useStyles();
 
-    return (
-        <div>
+    // return (
+    //     <div>
            
-      <StyledAccordion direction="up">
-        <MyAAccordionSummary expandIcon={<ExpandMore />} aria-controls="panel1a-content" >
-        </MyAAccordionSummary>
-        <MyAccordionDetails >
-          <p style={{border:'2px solid'}}>hgjhfhjfvhjf</p>
-          <p>hgjhfhjfvhjf</p>
+    //   <StyledAccordion direction="up">
+    //     <MyAAccordionSummary expandIcon={<ExpandMore />} aria-controls="panel1a-content" >
+    //     </MyAAccordionSummary>
+    //     <MyAccordionDetails >
+    //       <p style={{border:'2px solid'}}>hgjhfhjfvhjf</p>
+    //       <p>hgjhfhjfvhjf</p>
           
-        </MyAccordionDetails>
-      </StyledAccordion>
-      </div>
-    );
+    //     </MyAccordionDetails>
+    //   </StyledAccordion>
+    //   </div>
+    // );
 
-}
+
 export default Home;
 
 
