@@ -1,0 +1,10 @@
+.whatsapp_sendList{
+    display:flex;
+    flex-direction:row;
+    align-items: center;
+    padding: 5px;
+}
+
+.whatsapp_sendList h4{
+    margin: 5px;
+}

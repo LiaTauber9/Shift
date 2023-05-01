@@ -48,7 +48,7 @@ const ScheduleShift = (props)=>{
     const {user_id,name,color,start_at,end_at} = shift;
     const isDisplay = shiftFormat.isAllUsers || user_id == user.id;
     return(
-        <div className={`cell part`}  style={isDisplay ?{backgroundColor: `${color}90`}:null}  >
+        <div className={`cell part schedule_part`}  style={isDisplay ?{backgroundColor: `${color}90`}:null}  >
         {/* <div className={`cell part`}  style={isDisplay ?{backgroundColor: `${color}90`}:null} > */}
             {/* <div style={setTimeStyle(start_at,end_at,color)}>{start_at.slice(0,5)}-{end_at.slice(0,5)}</div> */}
             <div style={{color}}>
@@ -57,7 +57,7 @@ const ScheduleShift = (props)=>{
             <div>
                 {
                     isDisplay ?
-                    <h3 className='m_shift_selected' style={{ backgroundColor: color, border:0 }}>{name}</h3>   
+                    <h3 className='shift_selected' style={{ backgroundColor: color, border:0 }}>{name}</h3>   
                     : null 
                 }               
             </div>            

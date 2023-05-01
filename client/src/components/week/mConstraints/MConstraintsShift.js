@@ -1,9 +1,11 @@
 import { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-import { AppContext,ManagerContext,WeekContext } from '../../../App';
+import { AppContext, WeekContext } from '../../../App';
 import MConstraintsOption from './MConstraintsOption';
 import '../Week.css';
-import { Input, TextField, Stack } from '@mui/material';
+import { TextField, Stack, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { MCAcordion, MCAccordionSummary, MCAccordionDetails } from './MConstraintsAcordion';
 import {getShiftId, getDateString} from '../../../utils/week_utils';
 import { shiftsTime } from '../../../config/shiftsConfig';
 import './MConstraints.css';
@@ -13,7 +15,7 @@ const MConstraintsShift = (props) => {
 
     const { part, date, handleClick } = props;
     const { users, usersObj } = useContext(AppContext);
-    const { constraintsObj, scheduleObj} = useContext(WeekContext);
+    const { mConstraintsObj, scheduleObj} = useContext(WeekContext);
 
     const [shiftId] = useState(getShiftId(date,part));
     const [defaultTime] = useState({
@@ -35,7 +37,7 @@ const MConstraintsShift = (props) => {
         options.forEach(option=>constraints[option]=[])
         for(const user of users){
             const id = user.id+shiftId;
-            const row = constraintsObj[id]
+            const row = mConstraintsObj[id]
             if(row){
                 const option = row.option || 'unselected';
                 const {user_id,note} = row; 
@@ -61,13 +63,14 @@ const MConstraintsShift = (props) => {
     const setTimeStyle = (timeKey,timeVal)=>{
         const defaultStyle = {
                 height:20,
-                margin:1,
+                marginButtom:3,
         }
         const changeStyle =  {...defaultStyle,background:'rgb(217, 217, 209)'}
         const match = defaultTime[timeKey]===timeVal;
-        // const match = defaultTime[timeKey]===timeVal || `${defaultTime[timeKey]}:00`==`${timeVal}`
-        // console.log(defaultTime[timeKey],timeVal, match, );
-        return { '& .MuiInputBase-root': match ? defaultStyle : changeStyle} 
+        return { '& .MuiInputBase-root': match ? defaultStyle : changeStyle,
+        '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input':{padding:0.4},
+        '& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root':{fontSize:11}
+    }         
         // object for sx property => 
         //{
         //     '& .MuiInputBase-root': {
@@ -106,6 +109,7 @@ const MConstraintsShift = (props) => {
         const {start_at,end_at} = time;
         const {name,color} = usersObj[user_id || 'empty'];
         setSelected({user_id,name,color});
+        console.log(user_id);
         upsertShift(user_id,start_at,end_at)
         .then(res=>{
             if(res==='error'){
@@ -147,10 +151,9 @@ const MConstraintsShift = (props) => {
        
         return( 
                 constraints ?
-               
-                <div className={`cell part`} style={{ height: 300 }}>
-                {/* <p>{shiftId}</p>
-                <p>{scheduleObj[shiftId]?scheduleObj[shiftId].part : ''}</p> */}
+               <div className='cell m_constraints_cell'>
+                <div className='part m_constraints_part' >
+                <div className='time_box'>
                 {
                     ['start_at', 'end_at'].map((timeKey,index)=>
                     <TextField className='my-color'
@@ -158,19 +161,38 @@ const MConstraintsShift = (props) => {
                     key={index} type='time' value={time[timeKey]} onChange={(e)=>changeTime(e,timeKey)} inputProps={{ step: 300 }} />
                     )
                 }
-
-                 <h3 className='m_shift_selected' onClick={() => onSelect(null)} style={{ backgroundColor: selected.color }}>{selected.name}</h3>
+                </div>
+                
+                 <h3 className='shift_selected' onClick={() => onSelect(null)} style={{ backgroundColor: selected.color }}>{selected.name}</h3>
     
                 {
                     ['favorite','open'].map((option, index) => <MConstraintsOption key={index} option={option} employees={constraints[option]} onSelect={onSelect} />)
                 }
-                <Stack direction="row" spacing={2}>
+                </div>
+                <div className='acordion_box'>
+               <MCAcordion direction="up">
+                <MCAccordionSummary 
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                 />
+                <MCAccordionDetails>
+                    
+                        {
+                            ['unselected', 'close'].map((option, index) => <MConstraintsOption key={index} option={option} employees={constraints[option]} onSelect={onSelect} />)
+                        }
+                   
+                </MCAccordionDetails>
+               </MCAcordion>
+               </div>
+
+                {/* <Stack direction="row" spacing={2} justifySelf={'baseline'}>
 
                     {
                         ['unselected', 'close'].map((option, index) => <MConstraintsOption key={index} option={option} employees={constraints[option]} onSelect={onSelect} />)
                     }
 
-                </Stack> 
+                </Stack>  */}
 
             </div>
              
@@ -183,6 +205,42 @@ const MConstraintsShift = (props) => {
     }
 
     export default MConstraintsShift;
+
+
+
+
+
+//     <Accordion className='acordion_null_close_header' sx={{
+//         '& .css-sh22l5-MuiButtonBase-root-MuiAccordionSummary-root':{
+//             minHeight:12,
+//             height:12,
+//             display:'flex',
+//             flexDirection:'column',
+//         },
+//         '& .css-i4bv87-MuiSvgIcon-root':{fontSize:13},
+//         '& .css-1xsiedi-MuiButtonBase-root-MuiAccordionSummary-root':{minHeight:12,height:12},
+//         '& .css-v1e1aq-MuiPaper-root-MuiAccordion-root':{height:12,height:12}
+//     }}>
+//     <AccordionSummary
+//       expandIcon={<ExpandMoreIcon />}
+//       aria-controls="panel1a-content"
+//       id="panel1a-header"
+//       sx={{
+//         '& .css-2aanrh-MuiButtonBase-root-MuiAccordionSummary-root.Mui-expanded':{minHeight:0, height:0},
+//         '& .css-eg79fp-MuiButtonBase-root-MuiAccordionSummary-root':{minHeight:0, height:0}
+//       }}
+      
+//     >
+//       {/* <Typography>Accordion 1</Typography> */}
+//     </AccordionSummary>
+//     <AccordionDetails sx={{
+//         '& .css-15v22id-MuiAccordionDetails-root':{padding:'16px 0px', display:'flex',flexDirection:'column', gap:7}
+//     }}>
+//     {
+//             ['unselected', 'close'].map((option, index) => <MConstraintsOption key={index} option={option} employees={constraints[option]} onSelect={onSelect} />)
+//         }
+//     </AccordionDetails>
+//   </Accordion>
 
 
 

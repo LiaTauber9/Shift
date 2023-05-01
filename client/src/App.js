@@ -21,7 +21,8 @@ function App() {
   const [user, setUser] = useState('');
   const [users, setUsers] = useState([]);
   const [usersObj, setUsersObj] = useState({});
-  const [constraintsObj, setConstraintsObj] = useState({});
+  const [constraintsObj, setConstraintsObj] = useState(null);
+  const [mConstraintsObj, setMConstraintsObj] = useState({});
   const [scheduleObj, setScheduleObj] = useState({});
   const [allScheduleData, setAllScheduleData] = useState({});
   const [upsertScheduleData, setUpsertScheduleData] = useState({});
@@ -30,7 +31,7 @@ function App() {
   return (
     <BrowserRouter>
       <AppContext.Provider value={{ token, setToken, user, setUser, users, setUsers, usersObj, setUsersObj, }}>
-        <WeekContext.Provider value={{ constraintsObj, setConstraintsObj, scheduleObj, setScheduleObj }}>
+        <WeekContext.Provider value={{ constraintsObj, setConstraintsObj, mConstraintsObj, setMConstraintsObj, scheduleObj, setScheduleObj }}>
           <ManagerContext.Provider value={{ allScheduleData, setAllScheduleData, upsertScheduleData, setUpsertScheduleData }}>
             <div className="App">
               <Nav />

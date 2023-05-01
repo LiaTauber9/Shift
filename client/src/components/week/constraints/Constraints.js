@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import axios from 'axios';
-import { AppContext } from '../../../App'
+import { AppContext, WeekContext } from '../../../App'
 import {getWeekDates, getDateString} from '../../../utils/week_utils';
 import Week from '../Week';
 import '../Week.css';
@@ -11,16 +11,15 @@ const Constraints = (props) => {
     const navigate = useNavigate();
 
     const { user } = useContext(AppContext);
-    const [weekConst, setWeekConst] = useState([]);
-    const [displayedWeek, setDisplayedWeek] = useState(1)
+    const { constraintsObj, setConstraintsObj} = useContext(WeekContext);
+    // const [weekConst, setWeekConst] = useState([]);
+    const [displayedWeek] = useState(1);
+    const [weekDates] = useState(getWeekDates(displayedWeek)); //=>array of Date-Obj of next week
 
-
-    let weekDates = getWeekDates(displayedWeek); //=>array of Date-Obj of next week
-    let fullDateList = weekDates.map(item => getDateString(item));; //=>array of String-format-date:'yyyy-mm-dd'
-    const upsertConstraintsData = {};
 
     //initialize constraints of week:
     const getConstraints = async () => {
+        const fullDateList = weekDates.map(item => getDateString(item));; //=>array of String-format-date:'yyyy-mm-dd'
         try {
             const response = await axios.get(
                 '/constraints/get',
@@ -33,55 +32,22 @@ const Constraints = (props) => {
                 { headers: { 'Content-Type': 'application/json' } }
             )
             console.log('getConstraints=>', response.data)
-            setWeek(response.data)
-        } catch (e) { console.log(e) }
-    }
-
-    const createWeek = () => {
-        const week = []
-        for (let i = 0; i < 7; i++) {
-            const day = {
-                date: weekDates[i],
-                data: [
-                    { option: null, note: null }, { option: null, note: null }, { option: null, note: null }
-                ],
+            const constObj = {}
+            for(const row of response.data){
+                constObj[row.id] = row
             }
-            week.push(day)
+            setConstraintsObj(constObj)
+                                   
+        } catch (e) { 
+            console.log(e);
+            alert("Error... Cen't get your saved constraints") 
         }
-        console.log(week);
-        return week
-    }
-
-    const setWeek = (constraintsFromDB) => {
-        const week = createWeek(); //array of 7 objects - (for each day of week) {date:Date, constraints:Array schedule:Array} 
-
-        for (const row of constraintsFromDB) {
-            const { day, part, option, note } = row;
-            week[day].data[part] = { option, note }
-        }
-        console.log('setConstraintsWeek=>', week);
-        setWeekConst(week);
-    }
-
-
-    //update changes in table:
-    const handleShiftClick = (data) => {
-        console.log('handleShiftClick data=>', data);
-        const { day, part } = data;
-        // console.log('setDayConstraints=>',dayIndex,constaintsList);
-
-        const constraintId = `${user.id}${getDateString(weekDates[day], true, true)}${part}`;
-        const newShiftConstraint = {
-            ...data,
-            id: constraintId, user_id: user.id, date: fullDateList[day]
-        }
-        upsertConstraintsData[constraintId] = newShiftConstraint;
     }
 
     const upsertConstraints = async () => {
         const data = [];
-        for (let constraint in upsertConstraintsData) {
-            data.push(upsertConstraintsData[constraint])
+        for (let constraint in constraintsObj) {
+            data.push(constraintsObj[constraint])
         }
         console.log('upsertConstraints=>', data);
         try {
@@ -106,17 +72,69 @@ const Constraints = (props) => {
         }
     }, []);
 
-    return (<div>
+    return (
+       constraintsObj ?
+    <div>
         <h1>Constreaints Table</h1>
         <div className='table'>
-            <Week type='constraints'
-                initWeek={weekConst}
-                handleShiftClick={handleShiftClick} />
+        <Week type='constraints'
+            initWeek={weekDates}
+            handleShiftClick={null}
+            shiftFormat={null} />
         </div>
 
-        <Button onClick={upsertConstraints}>Save</Button>
-    </div>)
+        <Button color="success" onClick={upsertConstraints}>Save</Button>
+    </div>
+    : null)
 }
 
 export default Constraints
+
+
+
+
+ // let weekDates = getWeekDates(displayedWeek); //=>array of Date-Obj of next week
+    // let fullDateList = weekDates.map(item => getDateString(item));; //=>array of String-format-date:'yyyy-mm-dd'
+    // const upsertConstraintsData = {};
+
+// const createWeek = () => {
+    //     const week = []
+    //     for (let i = 0; i < 7; i++) {
+    //         const day = {
+    //             date: weekDates[i],
+    //             data: [
+    //                 { option: null, note: null }, { option: null, note: null }, { option: null, note: null }
+    //             ],
+    //         }
+    //         week.push(day)
+    //     }
+    //     console.log(week);
+    //     return week
+    // }
+
+    // const setWeek = (constraintsFromDB) => {
+    //     const week = createWeek(); //array of 7 objects - (for each day of week) {date:Date, constraints:Array schedule:Array} 
+
+    //     for (const row of constraintsFromDB) {
+    //         const { day, part, option, note } = row;
+    //         week[day].data[part] = { option, note }
+    //     }
+    //     console.log('setConstraintsWeek=>', week);
+    //     setWeekConst(week);
+    // }
+
+
+    //update changes in table:
+    // const handleShiftClick = (data) => {
+    //     console.log('handleShiftClick data=>', data);
+    //     const { day, part } = data;
+    //     // console.log('setDayConstraints=>',dayIndex,constaintsList);
+
+    //     const constraintId = `${user.id}${getDateString(weekDates[day], true, true)}${part}`;
+    //     const newShiftConstraint = {
+    //         ...data,
+    //         id: constraintId, user_id: user.id, date: fullDateList[day]
+    //     }
+    //     upsertConstraintsData[constraintId] = newShiftConstraint;
+    // }
 

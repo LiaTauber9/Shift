@@ -36,6 +36,7 @@ const LoginForm = () => {
         navigate('/');
       } catch (e) {
         // console.log(e.response.data);
+        alert("Couldn't log-in, try again")
         console.log('my error=>',e);
       }
   }

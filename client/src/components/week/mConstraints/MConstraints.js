@@ -14,8 +14,8 @@ const MConstraints = (props) => {
     const navigate = useNavigate();
 
     const { user, users } = useContext(AppContext);
-    const {constraintsObj, scheduleObj} = useContext(WeekContext);
-    const { allScheduleData, upsertScheduleData } = useContext(ManagerContext)
+    const {mConstraintsObj, scheduleObj} = useContext(WeekContext);
+    // const { allScheduleData, upsertScheduleData } = useContext(ManagerContext)
 
     const [weekMConst, setWeekMConst] = useState(null);
     const [weekDates, setWeekDates] = useState(null)
@@ -40,10 +40,11 @@ const MConstraints = (props) => {
 
             console.log('mGetConstraints=>', data.status, data.data)
             constraints = data.data
+            console.log(constraints);
             data.data.forEach(constraint => {
-                constraintsObj[constraint.id] = constraint
+                mConstraintsObj[constraint.id] = constraint
             });
-            console.log('constraintsObj=>',constraintsObj);
+            console.log('constraintsObj=>',mConstraintsObj);
         } catch (e) { console.log(e) }
 
         try {
@@ -109,8 +110,10 @@ const MConstraints = (props) => {
                 }
             })
             console.log('postSchedule=>', response.data);
+            alert('Schedule posted successfully')
         } catch (e) {
             console.log('postSchedule error=>', e)
+            alert("Some Error.... Couldn't post schedule")
         }
     }
 

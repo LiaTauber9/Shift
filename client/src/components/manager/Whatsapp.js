@@ -1,12 +1,14 @@
 import axios from 'axios';
-import { TextField, Box, Button, Card, CardContent, Typography, Avatar } from '@mui/material';
+import { TextField, Box, Button, Card, CardContent, Avatar, AvatarGroup } from '@mui/material';
 import { useState, useContext } from 'react';
 import { AppContext } from '../../App';
+import './manager.css'
+
 
 const WhatsApp = (props) => {
     const [msg, setMsg] = useState('');
     const { usersObj } = useContext(AppContext)
-    const { updateSendToList, sendToList } = props
+    const { updateSendToList, sendToList, isSent } = props
 
 
     const whatsappApiKeys = {
@@ -33,10 +35,27 @@ const WhatsApp = (props) => {
 
             axios.request(options).then(function (response) {
                 console.log(response.data);
+                isSent();
+                setMsg('');
             }).catch(function (error) {
                 console.error(error);
             });
         })
+    }
+
+    const setAvatarStyle = (emp, size, opacity) => {
+        return {
+            bgcolor: `${usersObj[emp].color}`,
+            opacity: opacity,
+            width: size,
+            height: size,
+            fontSize: size / 2,
+            transition: 'z-index 0.2s',
+            '&:hover': {
+                zIndex: 1,
+                opacity: 1
+            }
+        }
     }
 
     const handleSubmit = async (event) => {
@@ -44,7 +63,6 @@ const WhatsApp = (props) => {
         const message = event.target.message.value;
         console.log('message=>', message);
         send(message);
-        setMsg('')
     }
 
     const handleInputChange = (event) => {
@@ -53,18 +71,17 @@ const WhatsApp = (props) => {
 
 
     return (
-        <Card>
+        <Card >
 
-            <CardContent sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
-                <Typography gutterBottom variant="h5" component="div">
-                    To:
-                </Typography>
-                {
-                    sendToList.map((user, index) => <Avatar key={index} sx={{ bgcolor: usersObj[user].color }} onClick={() => updateSendToList(user)}>{usersObj[user].avatar_name} </Avatar>)
-                }
-
-            </CardContent>
-            <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+            <div className='whatsapp_sendList'>
+                <h4> To:</h4>
+                <AvatarGroup max={8}>
+                    {
+                        sendToList.map((user, index) => <Avatar key={index} sx={setAvatarStyle(user,25,0.6)} onClick={() => updateSendToList(user)}>{usersObj[user].avatar_name} </Avatar>)
+                    }
+                </AvatarGroup>
+            </div>
+            <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', padding:'10px 5px 0px 5px' }}>
                 <form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                     {/* <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} /> */}
                     <TextField id="input-with-sx" name='message' label="Message" variant="outlined" value={msg} multiline rows={4} onChange={handleInputChange} required />
@@ -81,6 +98,50 @@ const WhatsApp = (props) => {
 }
 
 export default WhatsApp
+
+
+
+const UserAvatar = (props) => {
+    const { emp, size, opacity } = props;
+    const { usersObj } = useContext(AppContext);
+    const styleObj = {
+        bgcolor: `${usersObj[emp.user_id].color}`,
+        opacity: opacity,
+        width: size,
+        height: size,
+        fontSize: size / 2,
+        transition: 'z-index 0.2s',
+        '&:hover': {
+            zIndex: 1,
+            opacity: 1
+        }
+    }
+    const commentStyle = {
+        border: '3px dashed black',
+        animation: 'rippleA 1.2s infinite',
+        '@keyframes rippleA': {
+            '0%': {
+                border: '1px dashed black'
+            },
+            '50%': {
+                border: '2px dashed black'
+            },
+            '100%': {
+                border: '1px dashed black'
+            }
+        }
+    }
+
+    return (
+            <Avatar
+                // key={index}
+                onClick={() => props.onSelect(emp.user_id)}
+                sx={styleObj}
+            >
+                {usersObj[emp.user_id].avatar_name}
+            </Avatar>
+    )
+}
 
 
 

@@ -45,7 +45,7 @@ const Schedule = () => {
 
     
     const changeDisplayedWeek = () => {
-        setIsPost(true);
+        setIsPost(false);
         const week = displayedWeek === 0 ? 1 : 0;
         setDisplayedWeek(week)
     }
@@ -74,7 +74,7 @@ const Schedule = () => {
                 :  <h1>{msg || ''}</h1>
             }
 
-            <Button onClick={changeDisplayedWeek}>{
+            <Button color="success" onClick={changeDisplayedWeek}>{
                 displayedWeek === 0 ? 'Next Week' : 'This Week'
             }</Button>
         </div>

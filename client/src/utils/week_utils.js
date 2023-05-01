@@ -50,7 +50,7 @@ function padTo2Digits(num) {
   }
 
 export const getShiftId = (date,part,user_id='')=>{
-    return  `${getDateString(date, true, true)}${part}${user_id}`
+    return  `${user_id}${getDateString(date, true, true)}${part}`
 }
 
 export const getScheduleRow = (date,part,status,user_id=null,start=null,end=null) => {

@@ -7,6 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
 import {useContext} from 'react';
 import { AppContext } from '../App';
+import '../App.css'
 
 const Nav = (props) => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const Nav = (props) => {
   }
 
   return (
-    <Stack spacing={2} direction='row'>      
+    <Stack spacing={2} direction='row' className='nav_stack'>      
       <Button component={Link} to='/profile' >Profile</Button>
       <Button component={Link} to='/register' >Register</Button>
       <Button component={Link} to='/login' >Login</Button>
@@ -33,9 +34,10 @@ const Nav = (props) => {
       <Button component={Link} to='/constraints' >Constraints</Button>
       <Button component={Link} to='/schedule' >Schedule</Button>
       {
-        user.role === 'manager' ? (<ManagerMenu />) : ('')
+        user.role === 'manager' ? <Button component={Link} to='' ><ManagerMenu /></Button>: ''
       }
-      <Button onClick={logout} >Logout</Button>
+      <Button component={Link} to='' onClick={logout}>Logout</Button>
+      {/* <Button onClick={logout} ></Button> */}
     </Stack>
   )
 }
@@ -59,6 +61,7 @@ const ManagerMenu = ()=>{
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
+        sx={{color:'white'}}
       >
         Manager
       </Button>

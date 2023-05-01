@@ -2,55 +2,38 @@
 // import AccordionSummary from '@mui/material/AccordionSummary';
 // import AccordionDetails from '@mui/material/AccordionDetails';
 // import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Avatar, Stack, Tooltip } from "@mui/material";
-import Typography from '@mui/material/Typography';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import { useContext, useState } from "react";
+// import Typography from '@mui/material/Typography';
+// import List from '@mui/material/List';
+// import ListItem from '@mui/material/ListItem';
+import { Avatar, Tooltip, AvatarGroup } from "@mui/material";
+import { useContext } from "react";
 import { AppContext } from "../../../App";
 
 
 const MConstraintsOption = (props) => {
-    const [showList, setShowList] = useState(false);
+    const {usersObj} = useContext(AppContext);
 
-    const onSelect = (emp) => {
+    const onClick = (user_id) => {
+        console.log(user_id);
         switch (props.option) {
             case 'close': alert('This shift is not open'); break;
-            case 'unselected': onSelectNull(emp); break;
-            default: props.onSelect(emp.user_id)
+            case 'unselected': onSelectNull(user_id); break;
+            default: props.onSelect(user_id)
         }
     }
 
     const onSelectNull = (user_id) => {
-
+        alert(`${usersObj[user_id].name} didn't select any option, Send him a reminder`)
     }
 
     return (
-        props.option === 'close' || props.option === 'unselected' ?
-            <div>
-                <Typography className={props.option} onClick={() => setShowList(!showList)}>{props.option} </Typography>
-
-                {showList ?
-                    <List sx={{ bgcolor: 'white', zIndex: 1400, position: 'absolute' }}>
-                        {props.employees.map((emp, index) =>
-                            <ListItem key={index}>
-                                <UserAvatar key={index} emp={emp} onSelect={onSelect} />
-                            </ListItem>
-                        )
-                        }
-                    </List>
-                    : null
-                }
-            </div>
-            :
-            <div className="m_const_option" style={{ height: 50 }}>
-                <p className={props.option} style={{ margin: 0 }}>{props.option}: </p>
-                <Stack direction="row" spacing={1}>
-                    {props.employees.map((emp, index) => 
-                        <UserAvatar key={index} emp={emp} onSelect={onSelect} />
+            <div className={`m_const_option ${props.option}_box`}>
+                <p className={props.option} style={{fontSize:10,margin:0}}>{props.option}: </p>
+                <AvatarGroup max={8}>
+                    {props.employees.map((emp, index) =>
+                        <UserAvatar key={index} emp={emp} onClick={onClick} />
                     )}
-                </Stack>
-
+                </AvatarGroup>
             </div>
     )
 }
@@ -59,12 +42,19 @@ export default MConstraintsOption
 
 
 const UserAvatar = (props) => {
-    const { emp } = props;
+    const { emp, onClick } = props;
     const { usersObj } = useContext(AppContext);
     const noCommentStyle = {
-        bgcolor: `${usersObj[emp.user_id].color}80`, width: 25,
+        bgcolor: usersObj[emp.user_id].color,
+        opacity:0.6, 
+        width: 25,
         height: 25,
-        fontSize: 12
+        fontSize: 12,
+        transition: 'z-index 0.2s',
+        '&:hover': {
+            zIndex: 1,
+            opacity: 1
+        }
     }
     const commentStyle = {
         border: '3px dashed black',
@@ -79,22 +69,36 @@ const UserAvatar = (props) => {
             '100%': {
                 border: '1px dashed black'
             }
-        },
+        }
     }
+
     return (
         <Tooltip title={emp.note || ''}>
             <Avatar
                 // key={index}
-                onClick={() => props.onSelect(emp)}
+                onClick={() =>  onClick(emp.user_id)}
                 sx={[noCommentStyle, emp.note ? commentStyle : {}]}
             >
                 {usersObj[emp.user_id].avatar_name}
             </Avatar>
         </Tooltip>
     )
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
