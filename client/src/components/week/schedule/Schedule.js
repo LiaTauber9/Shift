@@ -74,7 +74,7 @@ const Schedule = () => {
                 :  <h1>{msg || ''}</h1>
             }
 
-            <Button color="success" onClick={changeDisplayedWeek}>{
+            <Button onClick={changeDisplayedWeek}>{
                 displayedWeek === 0 ? 'Next Week' : 'This Week'
             }</Button>
         </div>

@@ -83,7 +83,7 @@ const Constraints = (props) => {
             shiftFormat={null} />
         </div>
 
-        <Button color="success" onClick={upsertConstraints}>Save</Button>
+        <Button onClick={upsertConstraints}>Save</Button>
     </div>
     : null)
 }
