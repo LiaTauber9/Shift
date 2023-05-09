@@ -3,17 +3,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import jwt_decode from 'jwt-decode'
 
-// export const getUsers = async (req,res) => {
-//   try {
-//     const users = await Users.findAll({
-//       attributes:['id','email']
-//     });
-//     res.json(users)
-//   } catch (e) {
-//     console.log(e);
-//     res.status(404).json({msg:'not found'})
-//   }
-// }
 
 export const register = async(req,res) => {
   const {firstName,lastName,phone,email,password,color} = req.body;
@@ -37,6 +26,20 @@ export const register = async(req,res) => {
     res.status(404).json({msg:'Email already exists'})
   }
 
+}
+
+export const updateProfile = async(req, res)=>{
+  const newDetails = req.body;
+
+  try {
+    const [update] = await Users.bulkCreate([newDetails],{updateOnDuplicate:['first_name','last_name','phone','email']})
+    res.json({msg:'Updated Succesfully'})
+    console.log('newDetails=>',newDetails, 'update=>',update)
+
+  } catch (e) {
+    console.log(e);
+    res.status(404).json({msg:'Error in update profile'})
+  }
 }
 
 
@@ -94,3 +97,23 @@ export const token = (req,res) => {
 
   res.status(200).json({token:accessToken})
 }
+
+export const getUsers = async(req,res)=>{
+  const isActive= req.header('active')
+  try{
+      let response;
+      if(isActive){
+          response =  await Users.findAll({where:{active:isActive}});
+      }else{
+          response =  await Users.findAll();
+      }
+      // console.log(response);
+      res.json(response)
+  }catch(e){console.log(e)}
+ 
+}
+
+
+
+
+

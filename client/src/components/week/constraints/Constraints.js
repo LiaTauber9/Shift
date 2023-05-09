@@ -75,7 +75,7 @@ const Constraints = (props) => {
     return (
        constraintsObj ?
     <div>
-        <h1>Constreaints Table</h1>
+        <h1>Constraints Table</h1>
         <div className='table'>
         <Week type='constraints'
             initWeek={weekDates}

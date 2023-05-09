@@ -1,5 +1,7 @@
 import { useState, createContext } from 'react';
-import Profile from './components/profile/Profile';
+// import Profile from './components/profile/Profile';
+import Timesheet from './components/profile/Timesheet';
+import UpdateProfile from './components/profile/UpdateProfile';
 import LoginForm from './components/register-login/LoginForm';
 import RegisterForm from './components/register-login/RegisterForm';
 import Home from './components/Home';
@@ -37,7 +39,9 @@ function App() {
               <Nav />
               <Routes>
                 <Route path='/' element={<Home />} />
-                <Route path='/profile' element={<Profile />} />
+                {/* <Route path='/profile' element={<Profile />} /> */}
+                <Route path='/timesheet' element={<Timesheet />} />
+                <Route path='/update' element={<UpdateProfile />} />
                 <Route path='/login' element={<LoginForm />} />
                 <Route path='/register' element={<RegisterForm />} />
                 <Route path='/mconstraints' element={<MConstraints type='manager' />} />

@@ -12,6 +12,7 @@ import { AppContext } from "../../../App";
 
 const MConstraintsOption = (props) => {
     const {usersObj} = useContext(AppContext);
+    const optionsNames = {favorite:'preference', open:'open', unselected:'unselected', close:'closed'}
 
     const onClick = (user_id) => {
         console.log(user_id);

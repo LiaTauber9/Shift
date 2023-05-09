@@ -40,8 +40,10 @@ const ScheduleShift = (props)=>{
         if(scheduleObj[shiftId]){
             const shiftFromDB = scheduleObj[shiftId]
             const {user_id} = shiftFromDB;
-            const {name, color} = usersObj[user_id || 'empty'];
-            setShift({...scheduleObj[shiftId],name,color})
+            if(usersObj[user_id || 'empty']){
+                const {name, color} = usersObj[user_id || 'empty'];
+                setShift({...scheduleObj[shiftId],name,color})
+            }
         }
     },[])  
     
