@@ -121,6 +121,7 @@ const MConstraints = (props) => {
         setWeekMConst(week)
     }
 
+
     const countShifts = () => {
         if (users && users.length > 0) {
             const counter = {}
@@ -133,7 +134,7 @@ const MConstraints = (props) => {
                     counter[shiftObj.user_id].push(shiftObj.id)
 
                 }
-            }
+
             console.log('allScheduleData,counter=>', allScheduleData, counter);
             setShiftCounterObj({ ...counter })
         }
