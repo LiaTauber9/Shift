@@ -42,7 +42,9 @@ const SideBar = (props)=>{
                     <Avatar sx={{bgcolor:usersObj[user.id].color}} onClick={()=>selectEmp(user.id)} >{usersObj[user.id].avatar_name}</Avatar>
                     <Paper>
                         <Typography>
-                            {shiftCounterObj[user.id].length}
+                            {shiftCounterObj ?
+                            shiftCounterObj[user.id].length : null 
+                        }
                             </Typography>
                     </Paper>
                     <i className={whatsappIconClass(user.id)}style={{ color: 'greenyellow'}} onClick={()=>updateSendToList(user.id)}>

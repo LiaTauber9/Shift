@@ -42,7 +42,12 @@ const LoginForm = () => {
 
   const getUsers = async()=>{
     try{
-        const users = await axios.get('/m/getusers');
+        const users = await axios.get('/m/getusers',{
+          headers:{
+            'Content-Type':'application/json',
+            'active':'true'
+          }
+        });
         // console.log('getUsers=>',users.data);
         setUsers(users.data);
         setUsersObj(getUsersObj(users.data))

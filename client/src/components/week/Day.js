@@ -23,10 +23,10 @@ const Day = (props) => {
             {dayList[day]} / {dateString}
         </div>
             {type === 'schedule' ?
-            data.map((shift, index)=> <ScheduleShift key={index} part={index} shiftData={shift} handleClick={handleClick} />)
+            data.map((shift, index)=> <ScheduleShift key={index} date={date} part={index} shiftData={shift} handleClick={handleClick} />)
             : type === 'constraints' ?
-            data.map((shift,index)=><ConstraintsShift key={index} part={index} data={shift} changeOption={handleClick} />)
-            : data.map((shift, index)=><MConstraintsShift key={index} part={index} data={shift} changeOption={handleClick}/>)
+            data.map((shift,index)=><ConstraintsShift key={index}  date={date} part={index} data={shift} changeOption={handleClick} />)
+            : data.map((shift, index)=><MConstraintsShift key={index}  date={date} part={index} data={shift} changeOption={handleClick}/>)
         }
         </div>
         

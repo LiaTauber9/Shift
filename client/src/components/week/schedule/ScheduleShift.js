@@ -7,13 +7,14 @@ import { getUsersObj, getName } from '../../../utils/users';
 const ScheduleShift = (props)=>{
     const {start_at,end_at} = props.shiftData;
     const {users} = useContext(AppContext);
-    const id = props.shiftData.user_id || 'empty';
-    console.log('id=>',id);
+    const id = props.shiftData.user_id
+    // const id = props.shiftData.user_id || 'empty';
+    // console.log('id=>',id);
     
     const usersObj = getUsersObj(users);
-    console.log('usersObj[id]=>',usersObj[id]);
-    const color = usersObj[id].color || '#ffffff';
-    // const color = usersObj[id] ? usersObj[id].color : '#ffffff';
+    // console.log('usersObj[id]=>',usersObj[id]);
+    const color = usersObj[id] ? usersObj[id].color : '#ffffff';
+    
     
 
 

@@ -46,6 +46,7 @@ export const mGetConstraints = async (req, res) => {
         // console.log(existsShifts);
         res.json(existsShifts)
     } catch (e) {
+        console.log(e);
         res.json({ msg: 'error' })
     }
 }

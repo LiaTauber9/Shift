@@ -1,4 +1,4 @@
-import { Avatar, Button } from "@mui/material";
+import { Avatar, Button, Stack, Tooltip } from "@mui/material";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -14,15 +14,16 @@ const MConstraintsOption = (props) => {
     const { users, usersObj } = useContext(AppContext);
     const [showList, setShowList] = useState(false);
 
-    const onSelect = (emp)=>{
-        switch(props.option){
+
+    const onSelect = (emp) => {
+        switch (props.option) {
             case 'close': alert('This shift is not open'); break;
             case 'null': onSelectNull(emp); break;
             default: props.onSelect(emp.user_id)
         }
-    } 
+    }
 
-    const onSelectNull = (emp)=>{
+    const onSelectNull = (emp) => {
 
     }
 
@@ -30,22 +31,22 @@ const MConstraintsOption = (props) => {
     // const optionColor = {open:'blue',close:'red',favorite:'green'}
 
     return (
-        props.option === 'close' ||  props.option === 'null'?
+        props.option === 'close' || props.option === 'null' ?
             <div>
-                 <Typography className={props.option} onClick={()=>setShowList(!showList)}>{props.option} </Typography>
-                 
-              {showList ? 
-              <List  sx={{bgcolor:'white', zIndex:1400, position: 'absolute'}}>
-              {props.employees.map((emp,index)=>              
-                    <ListItem key={index}>
-                    <Avatar variant="rounded" onClick={() => onSelect(emp)} sx={{ bgcolor: `${usersObj[emp.user_id].color}80`, width:25, height:25, fontSize:12 }}>HH</Avatar>
-                  </ListItem>               
-              )
-            }
-              </List>
-              : null
-}
-            
+                <Typography className={props.option} onClick={() => setShowList(!showList)}>{props.option} </Typography>
+
+                {showList ?
+                    <List sx={{ bgcolor: 'white', zIndex: 1400, position: 'absolute' }}>
+                        {props.employees.map((emp, index) =>
+                            <ListItem key={index}>
+                                <Avatar variant="rounded" onClick={() => onSelect(emp)} sx={{ bgcolor: `${usersObj[emp.user_id].color}80`, width: 25, height: 25, fontSize: 12 }}>{usersObj[emp.user_id].avatar_name}</Avatar>
+                            </ListItem>
+                        )
+                        }
+                    </List>
+                    : null
+                }
+
 
 
 
@@ -80,17 +81,57 @@ const MConstraintsOption = (props) => {
                 </Accordion> */}
             </div>
             :
-            <div className="m_const_option">
-                <p className={props.option} style={{ margin: 0 }}>{props.option}:
-                    {props.employees.map((emp, index) =>
-                        <span>
-                            <span key={index} onClick={()=>onSelect(emp)} style={{ backgroundColor: `${usersObj[emp.user_id].color}80` }}>| {usersObj[emp.user_id].name} |</span>
-                            {
-                                emp.note ? <span onClick={() => { alert(emp.note) }}>*</span> : ''
-                            }
-                        </span>
+            <div className="m_const_option" style={{ height: 50 }}>
+                <p className={props.option} style={{ margin: 0 }}>{props.option}: </p>
+                <Stack direction="row" spacing={1}>
+                    {/* <p style={{ margin:0,display:"flex" }} > */}
+                    {props.employees.map((emp, index) => {
+                        const noCommentStyle = {
+                            bgcolor: `${usersObj[emp.user_id].color}80`, width: 25,
+                            height: 25,
+                            fontSize: 12
+                        }
+                        const commentStyle = {
+                            border: '3px dashed black',
+                            animation: 'rippleA 1.2s infinite',
+                            '@keyframes rippleA': {
+                                '0%': {
+                                    border: '1px dashed black'
+                                },
+                                '50%': {
+                                    border: '2px dashed black'
+                                },
+                                '100%': {
+                                    border: '1px dashed black'
+                                }
+                            },
+                        }
+                        return (
+                            <Tooltip title={emp.note || ''}>
+                            <Avatar 
+                        key={index} 
+                        onClick={() => onSelect(emp)} 
+                        sx={[noCommentStyle, emp.note ? commentStyle : {} ]}
+                        >
+                        {usersObj[emp.user_id].avatar_name}
+                    </Avatar>
+                    </Tooltip>
+                        ) 
+                        
+                    }
+                        // <span>
+                        
+
+
+                        //     <span key={index} onClick={()=>onSelect(emp)} style={{ backgroundColor: `${usersObj[emp.user_id].color}80` }}>| {usersObj[emp.user_id].name} |</span>
+                        //     {
+                        //         emp.note ? <span onClick={() => { alert(emp.note) }}>*</span> : ''
+                        //     }
+                        // </span>
                     )}
-                </p>
+                    {/* </p> */}
+                </Stack>
+
             </div>
     )
 }
