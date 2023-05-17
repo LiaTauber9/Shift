@@ -36,13 +36,19 @@ const LoginForm = () => {
         navigate('/');
       } catch (e) {
         // console.log(e.response.data);
+        alert("Couldn't log-in, try again")
         console.log('my error=>',e);
       }
   }
 
   const getUsers = async()=>{
     try{
-        const users = await axios.get('/m/getusers');
+        const users = await axios.get('/m/getusers',{
+          headers:{
+            'Content-Type':'application/json',
+            'active':'true'
+          }
+        });
         // console.log('getUsers=>',users.data);
         setUsers(users.data);
         setUsersObj(getUsersObj(users.data))
