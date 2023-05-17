@@ -267,6 +267,7 @@ export default MConstraints
         setWeekMConst(week)
     }
 
+<<<<<<< HEAD
     const countShifts = ()=>{
         counter = {}
         users.forEach(user=>counter[user.id]=[]);
@@ -277,6 +278,24 @@ export default MConstraints
                 counter[shiftObj.user_id].push(shiftObj.id)
                 
             }
+=======
+
+    const countShifts = () => {
+        if (users && users.length > 0) {
+            const counter = {}
+            users.forEach(user => counter[user.id] = []);
+
+            for (const shift in allScheduleData) {
+                const shiftObj = allScheduleData[shift]
+                if (shiftObj.user_id != null && counter[shiftObj.user_id]) {
+                    console.log(shiftObj.user_id, counter[shiftObj.user_id], counter);
+                    counter[shiftObj.user_id].push(shiftObj.id)
+
+                }
+
+            console.log('allScheduleData,counter=>', allScheduleData, counter);
+            setShiftCounterObj({ ...counter })
+>>>>>>> 03744b89cbfdc810defceb6341176f1305f453e0
         }
         console.log('allScheduleData,counter=>',allScheduleData,counter);
         setShiftCounterObj(counter)
