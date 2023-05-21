@@ -21,16 +21,18 @@ const WhatsApp = (props) => {
         30: '712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
     }
 
-    const send = (msg) => {
-        let isApiKey = true;
+    const send = async(msg) => {
+        const isSentTo = [];
+        const isNotSentTo = [];
+        const promises = [];
         sendToList.forEach(id => {
             if(!whatsappApiKeys[id]){
-                alert(`${usersObj[id].name} has no whatsapp number in this app`)
-                isApiKey = false
+                isNotSentTo.push(usersObj[id].name)
+                // alert(`${usersObj[id].name} has no whatsapp number in this app`)
             }else{
                 const options = {
                     method: 'POST',
-                    url: 'https://whin2.p.rapidapi.com/send',
+                    url: 'https://whin2.p.rapidapi2.com/send',
                     headers: {
                         'content-type': 'application/json',
                         'X-RapidAPI-Key': `${whatsappApiKeys[id]}`,
@@ -39,15 +41,22 @@ const WhatsApp = (props) => {
                     data: `{"text":"${msg}"}`
                 };
     
-                axios.request(options).then(function (response) {
+                const requestPromise = axios.request(options)
+                .then(function (response) {
                     console.log(response.data);
-                    isSent();
+                    isSentTo.push(usersObj[id].name)
                     setMsg('');
                 }).catch(function (error) {
                     console.error(error);
                 });
+                promises.push(requestPromise);
             }
         })
+        await Promise.all(promises);
+        console.log('isSentTo=>',isSentTo);
+        if(isSentTo.length > 0 || isNotSentTo.length > 0){
+            isSent(isSentTo,isNotSentTo)
+        }
     }
 
     const setAvatarStyle = (emp, size, opacity) => {

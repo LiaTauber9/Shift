@@ -29,8 +29,11 @@ const SideBar = (props)=>{
         setSendToList(list);
     }
 
-    const isSent = ()=>{
-        alert('message has sent successfuly')
+    const isSent = (sentTo,notSentTo)=>{
+        // const notSentMsg = notSentTo.length > 0 ? `message wasn't sent to ${sentTo.join(', ')}, (missing whatsapp-number), ` : '';
+        // alert(`${notSentMsg}message has sent successfuly to ${sentTo.join(', ')},`)
+        // setSendToList([]);
+        alert('message sent successfully')
         setSendToList([]);
     }
 

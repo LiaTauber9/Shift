@@ -14,10 +14,7 @@ const MConstraints = (props) => {
     const navigate = useNavigate();
 
     const { user, users } = useContext(AppContext);
-    const {mConstraintsObj, scheduleObj} = useContext(WeekContext);
-    // const { allScheduleData, upsertScheduleData } = useContext(ManagerContext)
-
-    // const [weekMConst, setWeekMConst] = useState(null);
+    const {mConstraintsObj, scheduleObj,setScheduleObj} = useContext(WeekContext);
     const [weekDates, setWeekDates] = useState(null)
     const [displayedWeek, setDisplayedWeek] = useState(1);
     const [shiftCounterObj, setShiftCounterObj] = useState(null);
@@ -53,14 +50,16 @@ const MConstraints = (props) => {
                 { params: params },
                 { headers: { 'Content-Type': 'application/json' } }
             )
-
+            const newScheduleObj = {}
             console.log('mGetSchedule=>', data.data);
             data.data.forEach(shift => {
                 scheduleObj[shift.id] = shift
+                newScheduleObj[shift.id] = shift
             });
             console.log('scheduleObj=>', scheduleObj);
             schedule = data.data;
-            countShifts();
+            setScheduleObj(newScheduleObj)
+            countShifts(newScheduleObj);
         } catch (e) { console.log(e) }
         if(constraints && schedule){
             setWeekDates(dates)
@@ -68,19 +67,19 @@ const MConstraints = (props) => {
         
     }
 
-    const countShifts = () => {
+    const countShifts = (currScheduleObj) => {
         if (users && users.length > 0) {
             const counter = {}
             users.forEach(user => counter[user.id] = []);
 
-            for (const shift in scheduleObj) {
-                const shiftObj = scheduleObj[shift]
+            for (const shift in currScheduleObj) {
+                const shiftObj = currScheduleObj[shift]
                 if (shiftObj.user_id != null && counter[shiftObj.user_id]) {
                     counter[shiftObj.user_id].push(shiftObj.id)
 
                 }
             }
-            console.log('scheduleObj,counter=>', scheduleObj, counter);
+            console.log('scheduleObj,counter=>', currScheduleObj, counter);
             setShiftCounterObj({ ...counter })
         }
     }
@@ -92,7 +91,7 @@ const MConstraints = (props) => {
     }
 
     const handleScheduleChange = ()=>{
-        countShifts();
+        countShifts(scheduleObj);
     }
 
     const postSchedule = async (status = 'save') => {
@@ -139,6 +138,7 @@ const MConstraints = (props) => {
             navigate('/login')
         }
         else {
+            setScheduleObj({});
             getConstraintsSchedule();
         }
     }, [displayedWeek])
@@ -156,7 +156,7 @@ const MConstraints = (props) => {
                     handleShiftClick={handleScheduleChange}
                     shiftFormat={null} />
             </div>
-            {/* <Button onClick={changeWeek}>{displayedWeek === 0 ? 'Next Week' : 'This week'}</Button> */}
+            <Button onClick={changeWeek}>{displayedWeek === 0 ? 'Next Week' : 'This week'}</Button>
             <div>
                 <Button onClick={() => postSchedule()}>Save and Post</Button>
             </div>
@@ -228,138 +228,138 @@ export default MConstraints
     //         const end = end_at || week[day].data[part].time.end_at;
     //         week[day].data[part].time = { start_at: start, end_at: end }
 
-<<<<<<< HEAD
-            setInitSchedule(schedule.data);
-            console.log('mGetSchedule=>', schedule.data);
-            schedule.data.forEach(shift => {
-                allScheduleData[shift.id]=shift
-            });
-            console.log('allScheduleData=>',allScheduleData);
-            countShifts();
-            mSetWeek(constraints.data, schedule.data)
-        } catch (e) { console.log(e) }
-    }
+// <<<<<<< HEAD
+//             setInitSchedule(schedule.data);
+//             console.log('mGetSchedule=>', schedule.data);
+//             schedule.data.forEach(shift => {
+//                 allScheduleData[shift.id]=shift
+//             });
+//             console.log('allScheduleData=>',allScheduleData);
+//             countShifts();
+//             mSetWeek(constraints.data, schedule.data)
+//         } catch (e) { console.log(e) }
+//     }
 
 
-    const mSetWeek = (constrains, schedule) => {
+//     const mSetWeek = (constrains, schedule) => {
 
-        const week = createWeek();
-        console.log('mConstrains=>', constrains);
-        for (let r of constrains) {
-            // if(r.option!=null){
-                const { day, part, option, user_id, note } = r;
-            // console.log('day, part, option, user_id', day, part, option, user_id);
-            week[day].data[part].constraints[option].push({user_id,note})
-            // }
-        }
-        for (let r of schedule) {
-            const { day, part, user_id, status, start_at, end_at } = r;
-            // console.log('mSchedule=>day, part, user_id=>', day, part, user_id);
-            week[day].data[part].schedule = { user_id, status }
-            // if(start_at!=null){}
-            const start = start_at || week[day].data[part].time.start_at;
-            // console.log('start=>',start);
-            const end = end_at || week[day].data[part].time.end_at;
-            week[day].data[part].time = { start_at:start, end_at:end }
+//         const week = createWeek();
+//         console.log('mConstrains=>', constrains);
+//         for (let r of constrains) {
+//             // if(r.option!=null){
+//                 const { day, part, option, user_id, note } = r;
+//             // console.log('day, part, option, user_id', day, part, option, user_id);
+//             week[day].data[part].constraints[option].push({user_id,note})
+//             // }
+//         }
+//         for (let r of schedule) {
+//             const { day, part, user_id, status, start_at, end_at } = r;
+//             // console.log('mSchedule=>day, part, user_id=>', day, part, user_id);
+//             week[day].data[part].schedule = { user_id, status }
+//             // if(start_at!=null){}
+//             const start = start_at || week[day].data[part].time.start_at;
+//             // console.log('start=>',start);
+//             const end = end_at || week[day].data[part].time.end_at;
+//             week[day].data[part].time = { start_at:start, end_at:end }
 
-        }
-        console.log('mSetWeek=>', week);
-        setWeekMConst(week)
-    }
+//         }
+//         console.log('mSetWeek=>', week);
+//         setWeekMConst(week)
+//     }
 
-<<<<<<< HEAD
-    const countShifts = ()=>{
-        counter = {}
-        users.forEach(user=>counter[user.id]=[]);
+// <<<<<<< HEAD
+//     const countShifts = ()=>{
+//         counter = {}
+//         users.forEach(user=>counter[user.id]=[]);
        
-        for(const shift in allScheduleData){
-            const shiftObj = allScheduleData[shift]
-            if(counter[shiftObj.user_id]){
-                counter[shiftObj.user_id].push(shiftObj.id)
+//         for(const shift in allScheduleData){
+//             const shiftObj = allScheduleData[shift]
+//             if(counter[shiftObj.user_id]){
+//                 counter[shiftObj.user_id].push(shiftObj.id)
                 
-            }
-=======
+//             }
+// =======
 
-    const countShifts = () => {
-        if (users && users.length > 0) {
-            const counter = {}
-            users.forEach(user => counter[user.id] = []);
+//     const countShifts = () => {
+//         if (users && users.length > 0) {
+//             const counter = {}
+//             users.forEach(user => counter[user.id] = []);
 
-            for (const shift in allScheduleData) {
-                const shiftObj = allScheduleData[shift]
-                if (shiftObj.user_id != null && counter[shiftObj.user_id]) {
-                    console.log(shiftObj.user_id, counter[shiftObj.user_id], counter);
-                    counter[shiftObj.user_id].push(shiftObj.id)
+//             for (const shift in allScheduleData) {
+//                 const shiftObj = allScheduleData[shift]
+//                 if (shiftObj.user_id != null && counter[shiftObj.user_id]) {
+//                     console.log(shiftObj.user_id, counter[shiftObj.user_id], counter);
+//                     counter[shiftObj.user_id].push(shiftObj.id)
 
-                }
+//                 }
 
-            console.log('allScheduleData,counter=>', allScheduleData, counter);
-            setShiftCounterObj({ ...counter })
->>>>>>> 03744b89cbfdc810defceb6341176f1305f453e0
-        }
-        console.log('allScheduleData,counter=>',allScheduleData,counter);
-        setShiftCounterObj(counter)
-    }
-=======
-    //     }
-    //     console.log('mSetWeek=>', week);
-    //     setWeekMConst(week)
-    // }
->>>>>>> context2
-
-    
-
-
-
-
-
-    //update changes in table:
-    // const handleShiftClick = (data) => {
-    //     console.log('handleShiftClick data =>', data);
-    //     const { day, part, user_id, start_at, end_at } = data;
-    //     // console.log('setDayConstraints=>',dayIndex,constaintsList);
-    //     const scheduleId = `${getDateString(weekDates[day], true, true)}${part}`;
-    //     console.log('scheduleId=>', scheduleId);
-    //     const newShiftSchedule = { id: scheduleId, date: fullDateStrings[day], day, part, user_id, start_at, end_at, status: 'save' }
-    //     console.log('handleShiftClick/manager/newShiftSchedule=>', newShiftSchedule);
-    //     upsertScheduleData[newShiftSchedule.id] = newShiftSchedule;
-    //     allScheduleData[newShiftSchedule.id] = newShiftSchedule;
-    //     console.log(allScheduleData);
-    //     countShifts();
-    //     console.log('upsertScheduleData after update=>', upsertScheduleData);
-    // }
+//             console.log('allScheduleData,counter=>', allScheduleData, counter);
+//             setShiftCounterObj({ ...counter })
+// >>>>>>> 03744b89cbfdc810defceb6341176f1305f453e0
+//         }
+//         console.log('allScheduleData,counter=>',allScheduleData,counter);
+//         setShiftCounterObj(counter)
+//     }
+// =======
+//     //     }
+//     //     console.log('mSetWeek=>', week);
+//     //     setWeekMConst(week)
+//     // }
+// >>>>>>> context2
 
     
 
 
+
+
+
+//     //update changes in table:
+//     // const handleShiftClick = (data) => {
+//     //     console.log('handleShiftClick data =>', data);
+//     //     const { day, part, user_id, start_at, end_at } = data;
+//     //     // console.log('setDayConstraints=>',dayIndex,constaintsList);
+//     //     const scheduleId = `${getDateString(weekDates[day], true, true)}${part}`;
+//     //     console.log('scheduleId=>', scheduleId);
+//     //     const newShiftSchedule = { id: scheduleId, date: fullDateStrings[day], day, part, user_id, start_at, end_at, status: 'save' }
+//     //     console.log('handleShiftClick/manager/newShiftSchedule=>', newShiftSchedule);
+//     //     upsertScheduleData[newShiftSchedule.id] = newShiftSchedule;
+//     //     allScheduleData[newShiftSchedule.id] = newShiftSchedule;
+//     //     console.log(allScheduleData);
+//     //     countShifts();
+//     //     console.log('upsertScheduleData after update=>', upsertScheduleData);
+//     // }
+
     
 
 
-        // if (status === 'post') {
-        //     data.forEach(shift => shift.status = 'post')
-            // for (let schedule of initSchedule) {
-            //     if (!upsertScheduleData[schedule.id]) {
-            //         data.push(schedule)
-            //     }
-            // }
-            // for (let schedule of data) {
-            //     schedule.status = 'post'
-            // }
-            // console.log('saveSchedule post =>', data);
-        //     msg = 'The shift schedule has been saved and posted successfully'
-        // }
-        // console.log('data=>', data);
-        // try {
-        //     const response = await axios.post('schedule/upsert', data, {
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         }
-        //     })
-        //     alert(msg)
-        //     console.log('upsertSchedule=>', response.data);
-        // } catch (e) {
-        //     console.log('upsertSchedule error=>', e)
-        // }
+    
+
+
+//         // if (status === 'post') {
+//         //     data.forEach(shift => shift.status = 'post')
+//             // for (let schedule of initSchedule) {
+//             //     if (!upsertScheduleData[schedule.id]) {
+//             //         data.push(schedule)
+//             //     }
+//             // }
+//             // for (let schedule of data) {
+//             //     schedule.status = 'post'
+//             // }
+//             // console.log('saveSchedule post =>', data);
+//         //     msg = 'The shift schedule has been saved and posted successfully'
+//         // }
+//         // console.log('data=>', data);
+//         // try {
+//         //     const response = await axios.post('schedule/upsert', data, {
+//         //         headers: {
+//         //             'Content-Type': 'application/json'
+//         //         }
+//         //     })
+//         //     alert(msg)
+//         //     console.log('upsertSchedule=>', response.data);
+//         // } catch (e) {
+//         //     console.log('upsertSchedule error=>', e)
+//         // }
     
 
 

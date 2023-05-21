@@ -3,7 +3,6 @@ import { Table, TableBody, TableCell, TableHead, TableRow, Select, MenuItem, But
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-// import { getDateString } from '../../utils/week_utils';
 import { getShiftData } from '../../utils/timeSheet';
 import { AppContext } from '../../App';
 
@@ -56,7 +55,6 @@ const Timesheet = () => {
 
     const getMonthlyShifts = async () => {
         const {year,month,daysSum} = displayed;
-        // console.log(year,month,daysSum);
         const month_2_d = padTo2Digits(month + 1);
         const daysSum_2_d = padTo2Digits(daysSum);   
         const date_start = `${year}-${month_2_d}-01`;
@@ -76,7 +74,6 @@ const Timesheet = () => {
 
     
     const displayratedHours = ()=>{
-        // let shifts;
         let restDays;
         let holidaysTytles;
         getRestDays()
@@ -169,13 +166,6 @@ const Timesheet = () => {
                              <TableCell bgcolor={bgList[1]} >{day.ext}</TableCell>
                              <TableCell bgcolor={bgList[2]} >{day.res_reg}</TableCell>
                              <TableCell bgcolor={bgList[3]} >{day.res_ext}</TableCell>
-                            {/* {
-                                detailsHeaders.map((detail, index) => <TableCell key={index} sx={{ borderRight: '0.5px solid #9f62ad' }} />)
-                            }  */}
-                            
-                            {/* {
-                                bgList.map((color, index) => <TableCell key={index} bgcolor={color} />)
-                            } */}
                         </TableRow>
                     ))}
                     <TableRow>
@@ -184,10 +174,6 @@ const Timesheet = () => {
                         <TableCell bgcolor={bgMonthList[1]} sx={styles.monthSumCell} >{TimesheetData.monthSum.extra}</TableCell>
                         <TableCell bgcolor={bgMonthList[2]} sx={styles.monthSumCell} >{TimesheetData.monthSum.restRegular}</TableCell>
                         <TableCell bgcolor={bgMonthList[3]} sx={styles.monthSumCell} >{TimesheetData.monthSum.restExtra}</TableCell>
-                        {/* {bgMonthList.map((color, index) =>
-                            <TableCell key={index} bgcolor={color} sx={{ color: 'white', '&:nth-of-type(4n +1)': { borderRight: '2px solid' } }} />
-                        )
-                        } */}
                     </TableRow>
                 </TableBody>
             </Table>
@@ -223,7 +209,7 @@ const ChooseMonth = (props)=>{
 
     return(
         <form onSubmit={submitForm} style={{ display: 'flex', gap: 20, justifyContent: 'center', border: '1px solid', padding: 'px', width: '300px', margin: '20px auto' }}>
-        <Select sx={{ '& .MuiSelect-select': { padding: '5.5px' } }} value={selectedMonth || 'Choose Month'} onChange={handleMonthChange}>
+        <Select sx={{ '& .MuiSelect-select': { padding: '5.5px' } }} value={selectedMonth} onChange={handleMonthChange}>
             {months.map((monthName, index) => <MenuItem key={index} value={index}>{monthName}</MenuItem>)}
         </Select>
         <Select sx={{ '& .MuiSelect-select': { padding: '5.5px' } }} value={selectedYear} onChange={handleYearChange}>
