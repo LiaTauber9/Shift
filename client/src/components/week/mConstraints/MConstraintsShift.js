@@ -70,7 +70,7 @@ const MConstraintsShift = (props) => {
         return { '& .MuiInputBase-root': match ? defaultStyle : changeStyle,
         '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input':{padding:0.4},
         '& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root':{fontSize:11},
-        '& .css-1x5jdmq':{fontSize:'11px',padding:'0.5px'} 
+        '& .css-1x5jdmq':{fontSize:'11px',padding:'1px'} 
     }         
         // object for sx property => 
         //{
