@@ -12,6 +12,9 @@ const Day = (props) => {
     // console.log('Day component data, date=>',data,date);
     const dayList = ['Sun', 'Mon', 'Tu', 'Wed', 'Th', 'Fri', 'Sat'];
     const dateString = getDateString(date,false);
+    const month = date.getMonth();
+    const datenum = date.getDate();
+    console.log('month=>',month,'datenum=>',datenum);
     
     const handleClick = () => {
         handleShiftClick()
@@ -20,7 +23,11 @@ const Day = (props) => {
     return (
         <div className='colunm'>
             <div className='cell header'>
-            {dayList[day]} / {dateString}
+                <p>
+                    <span style={{fontWeight:'bold'}}>{dayList[day]}</span>
+                    <span> / {month}-</span>
+                    <span style={{fontWeight:'bold'}}>{datenum}</span>
+                </p>
         </div>
             {type === 'schedule' ?
             [0,1,2].map(part=> <ScheduleShift key={part} date={date} part={part} handleClick={handleClick} shiftFormat={shiftFormat} />)
