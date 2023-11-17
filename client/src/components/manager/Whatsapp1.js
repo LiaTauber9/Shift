@@ -7,19 +7,11 @@ import './manager.css'
 
 const WhatsApp = (props) => {
     const [msg, setMsg] = useState('');
-    const { usersObj } = useContext(AppContext)
+    const { usersObj, users } = useContext(AppContext)
     const { updateSendToList, sendToList, isSent } = props
 
 
-    const whatsappApiKeys = {
-        36: '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
-        37: '712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc',
-        25: '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
-        26: '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
-        27: '712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc',
-        28: '8e1c700d55msh1fb52a08a8d78b3p1d7958jsnc471df7baa29',
-        30: '712db8b162msh59a4b7238f70a73p1bf6e6jsnf0927d5085cc'
-    }
+   
 
     const send = async(msg) => {
         const isSentTo = [];
@@ -35,7 +27,7 @@ const WhatsApp = (props) => {
                     url: 'https://whin2.p.rapidapi2.com/send',
                     headers: {
                         'content-type': 'application/json',
-                        'X-RapidAPI-Key': `${whatsappApiKeys[id]}`,
+                        'X-RapidAPI-Key': `${usersObj[id].whatsapp_key}`,
                         'X-RapidAPI-Host': 'whin2.p.rapidapi.com'
                     },
                     data: `{"text":"${msg}"}`

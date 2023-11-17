@@ -50,7 +50,7 @@ export const login = async (req,res) => {
         email:req.body.email.toLowerCase()
       }
     });
-    const {id,first_name, last_name, email, phone, role, active,color} = user[0]
+    const {id,first_name, last_name, email, phone, role, active,color, whatsapp_key} = user[0]
 
     const match = await bcrypt.compare(req.body.password, user[0].password);
     if(!match) return res.status(400).json({msg:'Wrong password'});
@@ -64,7 +64,7 @@ export const login = async (req,res) => {
       maxAge: 5 * 60 * 1000
     });
 
-    res.json({token:token, user:{id ,first_name, last_name, email, phone, role, active, color}})
+    res.json({token:token, user:{id ,first_name, last_name, email, phone, role, active, color, whatsapp_key}})
 
   } catch (e) {
     console.log(e);

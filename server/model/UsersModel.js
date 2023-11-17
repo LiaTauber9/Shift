@@ -28,7 +28,10 @@ const Users = db.define('users',{
   active: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
-  }
+  },
+  whatsapp_key: {
+    type: DataTypes.STRING
+  },
   // createdAt:{
   //   field:'createdat'
   // }
