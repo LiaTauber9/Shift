@@ -140,12 +140,12 @@ const MConstraints = (props) => {
         else {
             setScheduleObj({});
             getConstraintsSchedule();
-            for(const user of users){
-                for(const key in user){
-                    console.log(key);
-                }
+            // for(const user of users){
+            //     for(const key in user){
+            //         console.log(key);
+            //     }
                  
-            }
+            // }
         }
     }, [displayedWeek])
 
